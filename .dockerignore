@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/bin
+**/obj
+**/.venv
+**/__pycache__
+**/App_Data
+.git
+.vs
+.config
+Designs
+tests

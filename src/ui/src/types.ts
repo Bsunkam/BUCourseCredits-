@@ -1,0 +1,105 @@
+// Mirrors src/api/TransferCredit.Api/Contracts/Dtos.cs
+
+export type UserRole = "Staff" | "Evaluator" | "Admin" | "Student" | "Advisor";
+export type CaseStatus = "Open" | "AwaitingDocuments" | "InReview" | "Decided" | "Posted";
+export type CourseStatus =
+  | "Pending" | "Matching" | "ApprovedMatchFound" | "NeedsSyllabus" | "NeedsReview" | "Blocked" | "Decided";
+export type CreditSystem = "Semester" | "Quarter";
+export type OutcomeType = "BuEquivalent" | "ElectiveCredit" | "NoCredit";
+export type ScanStatus = "Pending" | "Clean" | "Quarantined";
+export type DocumentType = "Transcript" | "Syllabus" | "Other";
+
+export interface DemoUser { id: string; displayName: string; role: UserRole; studentRef?: string | null }
+export interface Institution { id: number; name: string; creditSystem: CreditSystem; catalogueSource?: string | null }
+
+export interface BuCourse {
+  id: number; code: string; title: string; program: string; requirementType: string; credits: number;
+  description?: string | null; verifiedStatus: "Yes" | "Check"; sourceUrl?: string | null; buOnlyRule?: string | null;
+}
+
+export interface CaseSummary {
+  id: number; caseRef: string; studentName: string; studentRef: string; program: string; startDate: string;
+  deadlineDate: string; daysRemaining: number; overdue: boolean; status: CaseStatus; courseCount: number;
+  openCourseCount: number; createdAt: string;
+}
+
+export interface AppliedRule {
+  id: number; outcomeType: OutcomeType; buCourse?: BuCourse | null; verifiedStatus: "Yes" | "Check";
+  decisionSource: string; fromEvaluation: boolean;
+}
+
+export interface Evidence { source: string; snippet: string; matchesOutcome?: string | null }
+
+export interface Candidate {
+  id: number; buCourse: BuCourse; matchLevel: string; score?: number | null; confidence?: string | null;
+  evidence?: Evidence[] | string[] | null; explanation?: string | null; source: "ApprovedRule" | "Cache" | "Agent" | "Stub";
+  isBlocked: boolean; matchVersion: string;
+}
+
+export interface Evaluation {
+  id: number; sourceCourseId: number; evaluatorId: string; outcomeType: OutcomeType; buCourse?: BuCourse | null;
+  awardedUnits: number; rationale: string; status: "Draft" | "Final"; createdAt: string; decisionAt?: string | null;
+}
+
+export interface Course {
+  id: number; institutionId: number; institution: string; code: string; title: string; credits: number;
+  creditSystem: CreditSystem; convertedCredits: number; grade?: string | null; term?: string | null;
+  description?: string | null; hasSyllabus: boolean; status: CourseStatus; matchLevel?: string | null;
+  appliedRule?: AppliedRule | null; topCandidate?: Candidate | null; evaluation?: Evaluation | null;
+}
+
+export interface AgentRun {
+  id: number; source: "ApprovedRule" | "Cache" | "NewRun"; status: string; model?: string | null;
+  graphVersion?: string | null; promptVersion?: string | null; latencyMs: number; note?: string | null;
+  cacheKey: string; createdAt: string;
+}
+
+export interface PolicyFlags {
+  convertedCredits: number; quarterConversionApplied: boolean; gradeBelowMinimum?: boolean | null;
+  minimumGrade: string; buOnlyCourses: string[]; rulesVersion: string;
+}
+
+export interface CourseDetail {
+  course: Course; caseId: number; caseRef: string; program: string; syllabusText?: string | null;
+  policyFlags?: PolicyFlags | null; candidates: Candidate[]; evaluations: Evaluation[]; agentRuns: AgentRun[];
+  cacheKey: string;
+}
+
+export interface DocumentInfo {
+  id: number; caseId?: number | null; sourceCourseId?: number | null; documentType: DocumentType;
+  source: "Portal" | "Email" | "StaffUpload"; fileName: string; contentType: string; sizeBytes: number;
+  sha256: string; scanStatus: ScanStatus; extractionStatus: string; uploadedAt: string;
+}
+
+export interface AuditEntry {
+  id: number; timestamp: string; actorId: string; action: string; detail?: string | null; studentMessage?: string | null;
+}
+
+export interface CaseDetail {
+  summary: CaseSummary; studentEmail?: string | null; postedAt?: string | null; courses: Course[];
+  documents: DocumentInfo[]; timeline: AuditEntry[];
+}
+
+export interface StudentCourse {
+  id: number; code: string; title: string; institution: string; state: string; syllabusNeeded: boolean;
+  awardedUnits: number; outcome?: string | null;
+}
+
+export interface StudentStatus {
+  caseId: number; caseRef: string; program: string; startDate: string; deadlineDate: string; daysRemaining: number;
+  overdue: boolean; status: CaseStatus; nextAction: string; awardedUnits: number; pendingUnitsShown: number;
+  courses: StudentCourse[]; timeline: { timestamp: string; message: string }[]; documents: DocumentInfo[];
+}
+
+export interface IntakeMessage {
+  id: number; channel: "Email" | "EmlImport"; senderAddress: string; subject: string; receivedAt: string;
+  caseId?: number | null; matchStatus: "Matched" | "Unmatched" | "Ambiguous"; assignedBy?: string | null;
+  documents: DocumentInfo[];
+}
+
+export interface Metrics {
+  cases: number; casesByStatus: Record<string, number>; courses: number; matchRuns: number; aiCalls: number;
+  approvedRuleHits: number; cacheHits: number; reuseRate: number; finalDecisions: number;
+  finalDecisionsWithReviewer: number; agentRunsWithModelRecord: number; failedAgentRuns: number; casesWithDeadline: number;
+  coursesByStatus: Record<string, number>;
+}

@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+*.user
+App_Data/
+node_modules/
+dist/
+*.tsbuildinfo
+.venv/
+__pycache__/
+.pytest_cache/
+src/agent/eval/results.csv
+test-results/
+playwright-report/
+.env

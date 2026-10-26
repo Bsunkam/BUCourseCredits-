@@ -1,0 +1,159 @@
+trigger:
+  branches:
+    include:
+      - main
+
+# Azure Repos pull-request validation is set under
+# Repos > Branches > main > Branch policies > Build validation. PRs run Stage 1 only.
+
+variables:
+  buildConfiguration: 'Release'
+  dotnetVersion: '8.0.x'
+  nodeVersion: '22.x'
+  pythonVersion: '3.11'
+  solutionPath: 'TransferCredit.sln'
+  testProjects: 'src/api/**/*Tests.csproj'
+  azureServiceConnection: 'sc-azure-rm'   # also used to push to ACR, so no Docker registry connection is needed
+  acrName: 'yourregistry'                 # set by infra/setup-azure.ps1 output
+  apiImage: 'transfercredit-api'
+  agentImage: 'transfercredit-agent'
+  resourceGroup: 'rg-transfercredit'
+
+stages:
+
+  # ---------- Stage 1: build and test (also used for PR validation) ----------
+  - stage: Build
+    displayName: 'Build and test'
+    jobs:
+      - job: DotNet
+        displayName: '.NET build and test (src/api, src/database)'
+        pool: { vmImage: 'ubuntu-latest' }
+        steps:
+          - task: UseDotNet@2
+            inputs: { packageType: 'sdk', version: '$(dotnetVersion)' }
+          - task: DotNetCoreCLI@2
+            displayName: 'Restore'
+            inputs: { command: 'restore', projects: '$(solutionPath)', feedsToUse: 'config', nugetConfigPath: 'nuget.config' }
+          - task: DotNetCoreCLI@2
+            displayName: 'Build'
+            inputs:
+              command: 'build'
+              projects: '$(solutionPath)'
+              arguments: '--configuration $(buildConfiguration) --no-restore'
+          - task: DotNetCoreCLI@2
+            displayName: 'xUnit tests'
+            inputs:
+              command: 'test'
+              projects: '$(testProjects)'
+              arguments: '--configuration $(buildConfiguration) --no-build --no-restore'
+              publishTestResults: true
+          - script: |
+              dotnet tool restore
+              dotnet ef migrations script --idempotent \
+                --project src/database/TransferCredit.Data \
+                -o $(Build.ArtifactStagingDirectory)/sql/schema.sql
+            displayName: 'Generate idempotent SQL script'
+          - publish: $(Build.ArtifactStagingDirectory)/sql
+            artifact: sql
+
+      - job: Web
+        displayName: 'React build and test (src/ui)'
+        pool: { vmImage: 'ubuntu-latest' }
+        steps:
+          - task: NodeTool@0
+            inputs: { versionSpec: '$(nodeVersion)' }
+          - script: npm ci
+            workingDirectory: src/ui
+            displayName: 'Install packages'
+          - script: npm run lint
+            workingDirectory: src/ui
+            displayName: 'Typecheck'
+          - script: npm test
+            workingDirectory: src/ui
+            displayName: 'Unit tests'
+          - script: npm run build
+            workingDirectory: src/ui
+            displayName: 'Production build'
+
+      - job: Agent
+        displayName: 'Python agent tests (src/agent)'
+        pool: { vmImage: 'ubuntu-latest' }
+        steps:
+          - task: UsePythonVersion@0
+            inputs: { versionSpec: '$(pythonVersion)' }
+          - script: |
+              python -m pip install --upgrade pip
+              pip install -r src/agent/requirements.txt -r src/agent/requirements-dev.txt
+            displayName: 'Install dependencies'
+          - script: |
+              pytest src/agent/tests --junitxml=$(Build.ArtifactStagingDirectory)/agent-tests.xml
+            displayName: 'pytest (mock mode, no model calls)'
+            env:
+              AGENT_MODE: mock
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '$(Build.ArtifactStagingDirectory)/agent-tests.xml'
+
+  # ---------- Stage 2: build and push images ----------
+  - stage: Package
+    displayName: 'Package images'
+    dependsOn: Build
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+      - job: Images
+        pool: { vmImage: 'ubuntu-latest' }
+        steps:
+          - task: AzureCLI@2
+            displayName: 'Build and push API (with React build) and agent images'
+            inputs:
+              azureSubscription: '$(azureServiceConnection)'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                set -e
+                az acr login -n $(acrName)
+                REG=$(acrName).azurecr.io
+                docker build -f docker/api.Dockerfile -t $REG/$(apiImage):$(Build.BuildId) .
+                docker build -f src/agent/Dockerfile -t $REG/$(agentImage):$(Build.BuildId) src/agent
+                docker push $REG/$(apiImage):$(Build.BuildId)
+                docker push $REG/$(agentImage):$(Build.BuildId)
+
+  # ---------- Stage 3: deploy to dev (automatic) ----------
+  - stage: DeployDev
+    displayName: 'Deploy to Dev'
+    dependsOn: Package
+    condition: succeeded()
+    jobs:
+      - deployment: Dev
+        environment: 'tc-dev'
+        pool: { vmImage: 'ubuntu-latest' }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: pipelines/deploy.yml
+                  parameters:
+                    apiApp: 'ca-api-dev'
+                    agentApp: 'ca-agent-dev'
+                    runE2E: true
+
+  # ---------- Stages 4 and 5: approval, then deploy to demo ----------
+  - stage: DeployDemo
+    displayName: 'Deploy to Demo (approval required)'
+    dependsOn: DeployDev
+    condition: succeeded()
+    jobs:
+      - deployment: Demo
+        environment: 'tc-demo'   # the approval check lives on this environment
+        pool: { vmImage: 'ubuntu-latest' }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: pipelines/deploy.yml
+                  parameters:
+                    apiApp: 'ca-api-demo'
+                    agentApp: 'ca-agent-demo'
+                    runE2E: false

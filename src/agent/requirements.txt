@@ -1,0 +1,10 @@
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+langgraph==0.2.60
+langchain-core==0.3.28
+langchain-openai==0.2.14
+azure-identity==1.19.0
+azure-search-documents==11.5.2
+azure-ai-documentintelligence==1.0.0
+azure-storage-blob==12.24.0

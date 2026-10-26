@@ -1,0 +1,37 @@
+{
+  "_note": "SYNTHETIC demo users and the six-course demo case. No real student data (BR-13).",
+  "users": [
+    { "id": "staff-1", "displayName": "Sam Rivera (Credit Evaluation staff)", "role": "Staff", "email": "staff@demo.local" },
+    { "id": "eval-cs", "displayName": "Dr. Eva Chen (CS department evaluator)", "role": "Evaluator", "email": "eval-cs@demo.local" },
+    { "id": "admin-1", "displayName": "Alex Morgan (Admin)", "role": "Admin", "email": "admin@demo.local" },
+    { "id": "advisor-1", "displayName": "Jordan Lee (Advisor)", "role": "Advisor", "email": "advisor@demo.local" },
+    { "id": "student-a", "displayName": "Demo Student A", "role": "Student", "email": "student.a@demo.local", "studentRef": "DS-0001" },
+    { "id": "student-b", "displayName": "Demo Student B", "role": "Student", "email": "student.b@demo.local", "studentRef": "DS-0002" }
+  ],
+  "cases": [
+    {
+      "caseRef": "TC-1042",
+      "studentRef": "DS-0001",
+      "studentName": "Demo Student A",
+      "studentEmail": "student.a@demo.local",
+      "program": "Computer Science",
+      "startDate": "2026-09-02",
+      "courses": [
+        { "institution": "Northeastern University", "code": "CS 2500", "title": "Fundamentals of Computer Science 1", "credits": 4, "grade": "A", "term": "Fall 2024" },
+        { "institution": "Northeastern University", "code": "MATH 1341", "title": "Calculus 1 for Science and Engineering", "credits": 4, "grade": "B+", "term": "Fall 2024" },
+        { "institution": "Northeastern University", "code": "PSYC 1101", "title": "Foundations of Psychology", "credits": 4, "grade": "A-", "term": "Spring 2025" },
+        {
+          "institution": "Northeastern University", "code": "CS 2510", "title": "Fundamentals of Computer Science 2", "credits": 4, "grade": "B", "term": "Spring 2025",
+          "description": "Class-based program design in Java.",
+          "syllabus": "Course outcomes: design object-oriented programs in Java; implement and use data structures including linked lists, stacks, queues, binary search trees, hash tables and graphs; reason about recursion; analyse running time of algorithms; write unit tests. Weekly labs and two exams."
+        },
+        {
+          "institution": "Northeastern University", "code": "CS 3800", "title": "Theory of Computation", "credits": 4, "grade": "B+", "term": "Spring 2025",
+          "description": "Introduction to the theory of computation.",
+          "syllabus": "Topics: finite automata and regular languages, context-free grammars and pushdown automata, Turing machines, decidability, reductions, and complexity classes P and NP."
+        },
+        { "institution": "Pacific Coast College (synthetic)", "code": "CS 140", "title": "Data Structures and Algorithms", "credits": 4, "grade": "B", "term": "Winter 2024" }
+      ]
+    }
+  ]
+}

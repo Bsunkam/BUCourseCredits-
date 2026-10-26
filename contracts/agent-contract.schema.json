@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transfer-credit.local/contracts/agent-contract.schema.json",
+  "title": "Transfer Credit agent contract",
+  "description": "Single source of truth for calls from the .NET API to the Python agent service. Mirrored by src/api/TransferCredit.Api/Agent/AgentContracts.cs and src/agent/app/models.py. The API rejects any response that does not match and falls back to manual review.",
+  "$defs": {
+    "matchLevel": {
+      "enum": ["Likely equivalent", "Partial - syllabus review", "No equivalent found", "Must be taken at BU"]
+    },
+    "confidence": { "enum": ["low", "medium", "high"] },
+    "sourceCourse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["institution", "code", "title", "credits", "creditSystem"],
+      "properties": {
+        "institution": { "type": "string" },
+        "code": { "type": "string" },
+        "title": { "type": "string" },
+        "credits": { "type": "number", "minimum": 0 },
+        "creditSystem": { "enum": ["semester", "quarter"] },
+        "grade": { "type": ["string", "null"] },
+        "term": { "type": ["string", "null"] },
+        "description": { "type": ["string", "null"] }
+      }
+    },
+    "policyFlags": {
+      "description": "Computed by the .NET rules engine. The agent routes on these and never recalculates them.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["convertedCredits", "quarterConversionApplied", "minimumGrade", "buOnlyCourses", "rulesVersion"],
+      "properties": {
+        "convertedCredits": { "type": "number" },
+        "quarterConversionApplied": { "type": "boolean" },
+        "gradeBelowMinimum": { "type": ["boolean", "null"] },
+        "minimumGrade": { "type": "string" },
+        "buOnlyCourses": { "type": "array", "items": { "type": "string" } },
+        "rulesVersion": { "type": "string" }
+      }
+    },
+    "catalogueCourse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "title", "credits", "verified"],
+      "properties": {
+        "code": { "type": "string" },
+        "title": { "type": "string" },
+        "credits": { "type": "number" },
+        "description": { "type": ["string", "null"] },
+        "verified": { "enum": ["Yes", "Check"] }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["buCourseCode", "matchLevel", "confidence", "matchedAttributes"],
+      "properties": {
+        "buCourseCode": { "type": "string" },
+        "matchLevel": { "$ref": "#/$defs/matchLevel" },
+        "score": { "type": ["number", "null"] },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "matchedAttributes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "snippet"],
+      "properties": {
+        "source": { "type": "string" },
+        "snippet": { "type": "string", "description": "Verbatim text from the source document." },
+        "matchesOutcome": { "type": ["string", "null"] }
+      }
+    },
+    "evaluateRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["courseId", "threadId", "program", "sourceCourse", "policyFlags", "candidates", "promptVersion", "cacheKey"],
+      "properties": {
+        "courseId": { "type": "string" },
+        "threadId": { "type": "string" },
+        "program": { "type": "string" },
+        "sourceCourse": { "$ref": "#/$defs/sourceCourse" },
+        "syllabusText": { "type": ["string", "null"], "description": "Untrusted document text." },
+        "policyFlags": { "$ref": "#/$defs/policyFlags" },
+        "candidates": { "type": "array", "items": { "$ref": "#/$defs/catalogueCourse" } },
+        "promptVersion": { "type": "string" },
+        "cacheKey": { "type": "string" }
+      }
+    },
+    "evaluateResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "threadId", "matchLevel", "confidence", "candidates", "evidence", "explanation",
+        "studentMessage", "insufficientEvidence", "needsHumanReview", "graphVersion", "promptVersion", "model", "cacheKey"],
+      "properties": {
+        "status": { "enum": ["paused_for_review", "completed"] },
+        "threadId": { "type": "string" },
+        "matchLevel": { "$ref": "#/$defs/matchLevel" },
+        "suggestedBuCourse": { "type": ["string", "null"] },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "candidates": { "type": "array", "maxItems": 5, "items": { "$ref": "#/$defs/candidate" } },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
+        "explanation": { "type": "string" },
+        "studentMessage": { "type": "string" },
+        "insufficientEvidence": { "type": "boolean" },
+        "needsHumanReview": { "const": true },
+        "graphVersion": { "type": "string" },
+        "promptVersion": { "type": "string" },
+        "model": { "type": "string" },
+        "cacheKey": { "type": "string" }
+      }
+    },
+    "resumeRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["threadId", "outcomeType", "evaluatorId"],
+      "properties": {
+        "threadId": { "type": "string" },
+        "outcomeType": { "enum": ["BuEquivalent", "ElectiveCredit", "NoCredit"] },
+        "buCourseCode": { "type": ["string", "null"] },
+        "evaluatorId": { "type": "string" }
+      }
+    },
+    "extractRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documentId", "container", "blobPath", "documentType"],
+      "properties": {
+        "documentId": { "type": "string" },
+        "container": { "type": "string" },
+        "blobPath": { "type": "string" },
+        "documentType": { "type": "string" }
+      }
+    },
+    "extractResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "courses", "missingFields", "model"],
+      "properties": {
+        "text": { "type": "string" },
+        "courses": { "type": "array" },
+        "missingFields": { "type": "array", "items": { "type": "string" } },
+        "model": { "type": "string" }
+      }
+    }
+  }
+}

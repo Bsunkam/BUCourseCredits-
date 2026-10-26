@@ -1,0 +1,75 @@
+parameters:
+  - name: apiApp
+    type: string
+  - name: agentApp
+    type: string
+  - name: runE2E
+    type: boolean
+    default: false
+
+steps:
+  - checkout: self
+
+  # Agent first, so the API never points at an older agent contract.
+  - task: AzureCLI@2
+    displayName: 'Deploy agent service'
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az containerapp update -n ${{ parameters.agentApp }} -g $(resourceGroup) \
+          --image $(acrName).azurecr.io/$(agentImage):$(Build.BuildId)
+
+  # The API applies EF Core migrations on start (Database:AutoMigrate). The idempotent script is also
+  # published as the "sql" artifact for DBAs who prefer to apply it by hand.
+  - task: AzureCLI@2
+    displayName: 'Deploy API (with React build)'
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az containerapp update -n ${{ parameters.apiApp }} -g $(resourceGroup) \
+          --image $(acrName).azurecr.io/$(apiImage):$(Build.BuildId) \
+          --set-env-vars "AGENT_BASE_URL=http://${{ parameters.agentApp }}"
+
+  - task: AzureCLI@2
+    displayName: 'Smoke test'
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        FQDN=$(az containerapp show -n ${{ parameters.apiApp }} \
+          -g $(resourceGroup) \
+          --query properties.configuration.ingress.fqdn -o tsv)
+        check() {
+          for i in $(seq 1 12); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "https://$FQDN$1" || true)
+            [ "$code" = "200" ] && return 0
+            sleep 15
+          done
+          echo "FAILED: $1 returned $code"; return 1
+        }
+        check /health
+        check /api/health/agent   # proves the API can reach the private agent
+        check /api/health/intake  # Blob reachable; mailbox reachable or disabled
+        echo "##vso[task.setvariable variable=apiFqdn]$FQDN"
+
+  - ${{ if eq(parameters.runE2E, true) }}:
+    - task: NodeTool@0
+      inputs: { versionSpec: '$(nodeVersion)' }
+    - script: |
+        npm ci
+        npx playwright install --with-deps chromium
+        BASE_URL=https://$(apiFqdn) npx playwright test --reporter=junit
+      workingDirectory: tests/e2e
+      displayName: 'Playwright end-to-end (six-course demo flow)'
+      env:
+        PLAYWRIGHT_JUNIT_OUTPUT_NAME: $(Build.ArtifactStagingDirectory)/e2e.xml
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '$(Build.ArtifactStagingDirectory)/e2e.xml'
