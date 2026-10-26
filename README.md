@@ -20,7 +20,7 @@ posting to MyBU Student is simulated.
 | `contracts/agent-contract.schema.json` | Shared API ↔ agent JSON contract. |
 | `docker/api.Dockerfile`, `src/agent/Dockerfile` | Container images. |
 | `azure-pipelines.yml`, `pipelines/deploy.yml` | Five-stage Azure Pipelines (build/test → package → dev → approval → demo). |
-| `infra/setup-azure.ps1` | One-time Azure setup: ACR and App Service apps (API and agent for dev and demo) with ACR deployment webhooks. Needs only Contributor on the resource group. |
+| `infra/setup-azure.ps1` | One-time Azure setup: ACR and App Service apps (API and agent for dev and demo); stores each app's deployment webhook in the Azure DevOps variable group `transfercredit-deploy`. Needs only Contributor on the resource group. |
 | `tests/e2e` | Playwright test of the six-course demo flow. |
 
 ## Run locally

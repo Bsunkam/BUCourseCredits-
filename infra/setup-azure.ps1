@@ -3,8 +3,10 @@
 # assignments and no subscription-level provider registration, unlike the Container Apps design in the guide.
 #
 # Creates: ACR (admin credentials), one Linux App Service plan, and per environment an API app and an agent app.
-# Each app runs the image tag named after its environment (:dev, :demo). An ACR webhook redeploys the app when the
-# pipeline pushes that tag. The agent app accepts traffic only from the API app's outbound addresses.
+# Each app runs the image tag named after its environment (:dev, :demo). After pushing that tag, the pipeline POSTs to
+# the app's continuous-deployment webhook, which makes it pull and restart. The webhook URLs carry publishing
+# credentials, so they are stored as secrets in the Azure DevOps variable group "transfercredit-deploy".
+# The agent app accepts traffic only from the API app's outbound addresses.
 #
 # Usage (after az login and az account set):
 #   .\infra\setup-azure.ps1 -SqlConnectionString "<Azure SQL connection string>"
@@ -15,20 +17,25 @@ param(
     [string]$ResourceGroup = "rg-beyond-the-build",
     [string]$Location = "centralindia",
     [string]$PlanSku = "B2",
-    [string[]]$Environments = @("dev", "demo")
+    [string[]]$Environments = @("dev", "demo"),
+    [string]$DevOpsOrg = "https://dev.azure.com/evoketechnologies",
+    [string]$DevOpsProject = "Beyond the Build_Hackathon",
+    [string]$VariableGroup = "transfercredit-deploy"
 )
 $ErrorActionPreference = "Stop"
 
 function Az {
     # Runs az, throws on failure, returns trimmed output.
-    $out = & az.cmd @args
-    if ($LASTEXITCODE -ne 0) { throw "az $($args -join ' ') failed" }
+    $ErrorActionPreference = "Continue"   # Windows PowerShell treats any az stderr output as an error otherwise
+    $out = & az.cmd @args --only-show-errors 2>&1
+    if ($LASTEXITCODE -ne 0) { throw "az $($args[0..2] -join ' ') failed: $out" }
     if ($out) { ($out -join "`n").Trim() }
 }
 
 $acr = "acrtransfercredit$Suffix"
 $plan = "plan-transfercredit-$Suffix"
 $registry = "$acr.azurecr.io"
+$hooks = [ordered]@{}
 
 Write-Host "Shared resources in $ResourceGroup ($Location)"
 if (-not (Az acr list -g $ResourceGroup --query "[?name=='$acr'].name" -o tsv)) {
@@ -46,7 +53,7 @@ foreach ($envName in $Environments) {
     $agentApp = "app-tc-agent-$envName-$Suffix"
     Write-Host "Environment $envName ($apiApp, $agentApp)"
 
-    foreach ($app in @(@{ n = $agentApp; image = "transfercredit-agent" }, @{ n = $apiApp; image = "transfercredit-api" })) {
+    foreach ($app in @(@{ n = $agentApp; kind = "agent"; image = "transfercredit-agent" }, @{ n = $apiApp; kind = "api"; image = "transfercredit-api" })) {
         $image = "$registry/$($app.image):$envName"
         if (-not (Az webapp list -g $ResourceGroup --query "[?name=='$($app.n)'].name" -o tsv)) {
             # The image does not exist until the first pipeline run; the app starts once the webhook fires.
@@ -63,14 +70,9 @@ foreach ($envName in $Environments) {
         # The continuous-deployment webhook URL carries the app's publishing credentials, so SCM basic auth must be on.
         Az resource update -g $ResourceGroup --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies `
             --name scm --parent "sites/$($app.n)" --set properties.allow=true -o none
-        $hook = Az webapp deployment container config -n $app.n -g $ResourceGroup --enable-cd true --query CI_CD_URL -o tsv
-        $hookName = ($app.n -replace '[^a-zA-Z0-9]', '')
-        if ($hookName.Length -gt 50) { $hookName = $hookName.Substring(0, 50) }
-        if (Az acr webhook list -r $acr --query "[?name=='$hookName'].name" -o tsv) {
-            Az acr webhook update -r $acr -n $hookName --uri $hook --actions push --scope "$($app.image):$envName" -o none
-        } else {
-            Az acr webhook create -r $acr -n $hookName --uri $hook --actions push --scope "$($app.image):$envName" -o none
-        }
+        # The pipeline POSTs to this URL after pushing the tag (ACR Basic allows only two registry webhooks).
+        $hooks["cdHook_$($app.kind)_$envName"] = Az webapp deployment container config -n $app.n -g $ResourceGroup `
+            --enable-cd true --query CI_CD_URL -o tsv
     }
 
     Az webapp config appsettings set -n $agentApp -g $ResourceGroup -o none --settings "WEBSITES_PORT=8000" `
@@ -88,8 +90,9 @@ foreach ($envName in $Environments) {
 
     # Agent: allow only the API app's outbound addresses (az accepts up to 8 addresses per rule).
     $ips = (Az webapp show -n $apiApp -g $ResourceGroup --query possibleOutboundIpAddresses -o tsv) -split ',' | Sort-Object -Unique
-    $existing = Az webapp config access-restriction show -n $agentApp -g $ResourceGroup --query "ipSecurityRestrictions[?starts_with(name,'api-')].name" -o tsv
-    foreach ($rule in ($existing -split "`n" | Where-Object { $_ })) {
+    # Filter in PowerShell: az.cmd passes arguments through cmd.exe, which breaks on parentheses in a JMESPath query.
+    $existing = Az webapp config access-restriction show -n $agentApp -g $ResourceGroup --query "ipSecurityRestrictions[].name" -o tsv
+    foreach ($rule in ($existing -split "`n" | Where-Object { $_ -like "api-*" })) {
         Az webapp config access-restriction remove -n $agentApp -g $ResourceGroup --rule-name $rule -o none
     }
     for ($i = 0; $i -lt $ips.Count; $i += 8) {
@@ -98,6 +101,28 @@ foreach ($envName in $Environments) {
             --action Allow --ip-address $chunk --priority (100 + $i / 8) -o none
     }
 }
+
+Write-Host "Azure DevOps variable group $VariableGroup (deployment webhooks, secret)"
+$devOps = "499b84ac-1321-427f-aa17-267ca6975798"   # Azure DevOps resource id for az rest tokens
+$projectUrl = "$DevOpsOrg/$([Uri]::EscapeDataString($DevOpsProject))"
+$projectId = Az rest --resource $devOps --url "$DevOpsOrg/_apis/projects/$([Uri]::EscapeDataString($DevOpsProject))?api-version=7.1" --query id -o tsv
+$variables = @{}
+foreach ($k in $hooks.Keys) { $variables[$k] = @{ value = $hooks[$k]; isSecret = $true } }
+$body = @{ name = $VariableGroup; type = "Vsts"; variables = $variables; description = "Written by infra/setup-azure.ps1"
+    variableGroupProjectReferences = @(@{ name = $VariableGroup; projectReference = @{ id = $projectId; name = $DevOpsProject } }) }
+$bodyFile = [IO.Path]::GetTempFileName()
+try {
+    $body | ConvertTo-Json -Depth 6 | Out-File -Encoding ascii $bodyFile
+    $groupId = Az rest --resource $devOps --url "$projectUrl/_apis/distributedtask/variablegroups?api-version=7.1" `
+        --query "value[?name=='$VariableGroup'].id | [0]" -o tsv
+    if ($groupId) {
+        Az rest --resource $devOps --method put --url "$DevOpsOrg/_apis/distributedtask/variablegroups/$($groupId)?api-version=7.1" `
+            --body "@$bodyFile" --headers "Content-Type=application/json" -o none
+    } else {
+        Az rest --resource $devOps --method post --url "$DevOpsOrg/_apis/distributedtask/variablegroups?api-version=7.1" `
+            --body "@$bodyFile" --headers "Content-Type=application/json" -o none
+    }
+} finally { Remove-Item $bodyFile }
 
 Write-Host ""
 Write-Host "Done. Registry: $registry (user $acrUser)."

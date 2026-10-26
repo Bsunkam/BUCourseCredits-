@@ -14,19 +14,26 @@ steps:
       containerRegistry: '$(acrServiceConnection)'
       command: 'login'
 
-  # Promote the images built in this run by retagging them :${{ parameters.envName }}. Each push fires an ACR webhook
-  # that makes the matching App Service app pull and restart. Agent first, so the API never points at an older agent
-  # contract. The API applies EF Core migrations on start (Database:AutoMigrate); the idempotent script is also
+  # Promote the images built in this run by retagging them :${{ parameters.envName }}, then POST to the app's
+  # continuous-deployment webhook so it pulls the tag and restarts. Agent first, so the API never points at an older
+  # agent contract. The API applies EF Core migrations on start (Database:AutoMigrate); the idempotent script is also
   # published as the "sql" artifact for DBAs who prefer to apply it by hand.
   - script: |
       set -e
       REG=$(acrName).azurecr.io
-      for IMAGE in $(agentImage) $(apiImage); do
-        docker pull $REG/$IMAGE:$(Build.BuildId)
-        docker tag $REG/$IMAGE:$(Build.BuildId) $REG/$IMAGE:${{ parameters.envName }}
-        docker push $REG/$IMAGE:${{ parameters.envName }}
-      done
+      deploy() {
+        docker pull $REG/$1:$(Build.BuildId)
+        docker tag $REG/$1:$(Build.BuildId) $REG/$1:${{ parameters.envName }}
+        docker push $REG/$1:${{ parameters.envName }}
+        curl -sS --fail -X POST -d '' "$2" -o /dev/null
+        echo "Redeploy requested for $1:${{ parameters.envName }}"
+      }
+      deploy $(agentImage) "$AGENT_HOOK"
+      deploy $(apiImage) "$API_HOOK"
     displayName: 'Deploy agent, then API (retag :${{ parameters.envName }})'
+    env:
+      AGENT_HOOK: $(cdHook_agent_${{ parameters.envName }})
+      API_HOOK: $(cdHook_api_${{ parameters.envName }})
 
   - script: |
       FQDN=app-tc-api-${{ parameters.envName }}-$(appSuffix).azurewebsites.net

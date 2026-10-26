@@ -7,19 +7,31 @@ trigger:
 # Repos > Branches > main > Branch policies > Build validation. PRs run Stage 1 only.
 
 variables:
-  buildConfiguration: 'Release'
-  dotnetVersion: '8.0.x'
-  nodeVersion: '22.x'
-  pythonVersion: '3.11'
-  solutionPath: 'TransferCredit.sln'
-  testProjects: 'src/api/**/*Tests.csproj'
-  # Hosting is Azure App Service (infra/setup-azure.ps1). The pipeline only talks to ACR: pushing the :dev or :demo tag
-  # fires an ACR webhook that redeploys that environment's app, so no Azure Resource Manager connection is needed.
-  acrServiceConnection: 'sc-acr'   # Docker Registry connection to the ACR (admin credentials)
-  acrName: 'acrtransfercreditbtb'
-  apiImage: 'transfercredit-api'
-  agentImage: 'transfercredit-agent'
-  appSuffix: 'btb'
+  - name: buildConfiguration
+    value: 'Release'
+  - name: dotnetVersion
+    value: '8.0.x'
+  - name: nodeVersion
+    value: '22.x'
+  - name: pythonVersion
+    value: '3.11'
+  - name: solutionPath
+    value: 'TransferCredit.sln'
+  - name: testProjects
+    value: 'src/api/**/*Tests.csproj'
+  # Hosting is Azure App Service (infra/setup-azure.ps1). Deploying = push the :dev or :demo tag to ACR, then POST to
+  # the app's continuous-deployment webhook, so no Azure Resource Manager connection is needed.
+  - group: transfercredit-deploy   # secret webhook URLs cdHook_<agent|api>_<env>, written by infra/setup-azure.ps1
+  - name: acrServiceConnection     # Docker Registry connection to the ACR (admin credentials)
+    value: 'sc-acr'
+  - name: acrName
+    value: 'acrtransfercreditbtb'
+  - name: apiImage
+    value: 'transfercredit-api'
+  - name: agentImage
+    value: 'transfercredit-agent'
+  - name: appSuffix
+    value: 'btb'
 
 stages:
 
