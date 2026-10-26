@@ -1,7 +1,5 @@
 parameters:
-  - name: apiApp
-    type: string
-  - name: agentApp
+  - name: envName       # dev or demo: the image tag and the App Service app names (infra/setup-azure.ps1)
     type: string
   - name: runE2E
     type: boolean
@@ -10,52 +8,43 @@ parameters:
 steps:
   - checkout: self
 
-  # Agent first, so the API never points at an older agent contract.
-  - task: AzureCLI@2
-    displayName: 'Deploy agent service'
+  - task: Docker@2
+    displayName: 'Log in to ACR'
     inputs:
-      azureSubscription: '$(azureServiceConnection)'
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az containerapp update -n ${{ parameters.agentApp }} -g $(resourceGroup) \
-          --image $(acrName).azurecr.io/$(agentImage):$(Build.BuildId)
+      containerRegistry: '$(acrServiceConnection)'
+      command: 'login'
 
-  # The API applies EF Core migrations on start (Database:AutoMigrate). The idempotent script is also
+  # Promote the images built in this run by retagging them :${{ parameters.envName }}. Each push fires an ACR webhook
+  # that makes the matching App Service app pull and restart. Agent first, so the API never points at an older agent
+  # contract. The API applies EF Core migrations on start (Database:AutoMigrate); the idempotent script is also
   # published as the "sql" artifact for DBAs who prefer to apply it by hand.
-  - task: AzureCLI@2
-    displayName: 'Deploy API (with React build)'
-    inputs:
-      azureSubscription: '$(azureServiceConnection)'
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az containerapp update -n ${{ parameters.apiApp }} -g $(resourceGroup) \
-          --image $(acrName).azurecr.io/$(apiImage):$(Build.BuildId) \
-          --set-env-vars "AGENT_BASE_URL=http://${{ parameters.agentApp }}"
+  - script: |
+      set -e
+      REG=$(acrName).azurecr.io
+      for IMAGE in $(agentImage) $(apiImage); do
+        docker pull $REG/$IMAGE:$(Build.BuildId)
+        docker tag $REG/$IMAGE:$(Build.BuildId) $REG/$IMAGE:${{ parameters.envName }}
+        docker push $REG/$IMAGE:${{ parameters.envName }}
+      done
+    displayName: 'Deploy agent, then API (retag :${{ parameters.envName }})'
 
-  - task: AzureCLI@2
+  - script: |
+      FQDN=app-tc-api-${{ parameters.envName }}-$(appSuffix).azurewebsites.net
+      # Give App Service time to pull the new image and swap containers before checking.
+      sleep 120
+      check() {
+        for i in $(seq 1 20); do
+          code=$(curl -s -o /dev/null -w "%{http_code}" "https://$FQDN$1" || true)
+          [ "$code" = "200" ] && echo "OK: $1" && return 0
+          sleep 15
+        done
+        echo "FAILED: $1 returned $code"; curl -s "https://$FQDN$1"; return 1
+      }
+      check /health
+      check /api/health/agent   # proves the API can reach the agent (which only accepts the API's addresses)
+      check /api/health/intake  # document storage reachable; mailbox reachable or disabled
+      echo "##vso[task.setvariable variable=apiFqdn]$FQDN"
     displayName: 'Smoke test'
-    inputs:
-      azureSubscription: '$(azureServiceConnection)'
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        FQDN=$(az containerapp show -n ${{ parameters.apiApp }} \
-          -g $(resourceGroup) \
-          --query properties.configuration.ingress.fqdn -o tsv)
-        check() {
-          for i in $(seq 1 12); do
-            code=$(curl -s -o /dev/null -w "%{http_code}" "https://$FQDN$1" || true)
-            [ "$code" = "200" ] && return 0
-            sleep 15
-          done
-          echo "FAILED: $1 returned $code"; return 1
-        }
-        check /health
-        check /api/health/agent   # proves the API can reach the private agent
-        check /api/health/intake  # Blob reachable; mailbox reachable or disabled
-        echo "##vso[task.setvariable variable=apiFqdn]$FQDN"
 
   - ${{ if eq(parameters.runE2E, true) }}:
     - task: NodeTool@0

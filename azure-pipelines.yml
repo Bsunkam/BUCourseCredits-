@@ -13,11 +13,13 @@ variables:
   pythonVersion: '3.11'
   solutionPath: 'TransferCredit.sln'
   testProjects: 'src/api/**/*Tests.csproj'
-  azureServiceConnection: 'sc-azure-rm'   # also used to push to ACR, so no Docker registry connection is needed
-  acrName: 'yourregistry'                 # set by infra/setup-azure.ps1 output
+  # Hosting is Azure App Service (infra/setup-azure.ps1). The pipeline only talks to ACR: pushing the :dev or :demo tag
+  # fires an ACR webhook that redeploys that environment's app, so no Azure Resource Manager connection is needed.
+  acrServiceConnection: 'sc-acr'   # Docker Registry connection to the ACR (admin credentials)
+  acrName: 'acrtransfercreditbtb'
   apiImage: 'transfercredit-api'
   agentImage: 'transfercredit-agent'
-  resourceGroup: 'rg-transfercredit'
+  appSuffix: 'btb'
 
 stages:
 
@@ -105,20 +107,24 @@ stages:
       - job: Images
         pool: { vmImage: 'ubuntu-latest' }
         steps:
-          - task: AzureCLI@2
-            displayName: 'Build and push API (with React build) and agent images'
+          - task: Docker@2
+            displayName: 'Build and push API image (API + React build)'
             inputs:
-              azureSubscription: '$(azureServiceConnection)'
-              scriptType: 'bash'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                set -e
-                az acr login -n $(acrName)
-                REG=$(acrName).azurecr.io
-                docker build -f docker/api.Dockerfile -t $REG/$(apiImage):$(Build.BuildId) .
-                docker build -f src/agent/Dockerfile -t $REG/$(agentImage):$(Build.BuildId) src/agent
-                docker push $REG/$(apiImage):$(Build.BuildId)
-                docker push $REG/$(agentImage):$(Build.BuildId)
+              containerRegistry: '$(acrServiceConnection)'
+              repository: '$(apiImage)'
+              command: 'buildAndPush'
+              Dockerfile: 'docker/api.Dockerfile'
+              buildContext: '$(Build.SourcesDirectory)'
+              tags: '$(Build.BuildId)'
+          - task: Docker@2
+            displayName: 'Build and push agent image'
+            inputs:
+              containerRegistry: '$(acrServiceConnection)'
+              repository: '$(agentImage)'
+              command: 'buildAndPush'
+              Dockerfile: 'src/agent/Dockerfile'
+              buildContext: 'src/agent'
+              tags: '$(Build.BuildId)'
 
   # ---------- Stage 3: deploy to dev (automatic) ----------
   - stage: DeployDev
@@ -135,8 +141,7 @@ stages:
               steps:
                 - template: pipelines/deploy.yml
                   parameters:
-                    apiApp: 'ca-api-dev'
-                    agentApp: 'ca-agent-dev'
+                    envName: 'dev'
                     runE2E: true
 
   # ---------- Stages 4 and 5: approval, then deploy to demo ----------
@@ -154,6 +159,5 @@ stages:
               steps:
                 - template: pipelines/deploy.yml
                   parameters:
-                    apiApp: 'ca-api-demo'
-                    agentApp: 'ca-agent-demo'
+                    envName: 'demo'
                     runE2E: false
