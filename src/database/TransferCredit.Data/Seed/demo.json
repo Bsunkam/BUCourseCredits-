@@ -1,5 +1,5 @@
 {
-  "_note": "SYNTHETIC demo users and the six-course demo case. No real student data (BR-13).",
+  "_note": "SYNTHETIC demo users and demo cases. No real student data (BR-13). Case 1 is the brief's six-course scenario: a community-college transfer with 3 existing equivalencies, 2 'maybe' courses and 1 quarter-system course. Case 2 is a Northeastern transfer that also shows the BU-only rule (BR-10).",
   "users": [
     { "id": "staff-1", "displayName": "Sam Rivera (Credit Evaluation staff)", "role": "Staff", "email": "staff@demo.local" },
     { "id": "eval-cs", "displayName": "Dr. Eva Chen (CS department evaluator)", "role": "Evaluator", "email": "eval-cs@demo.local" },
@@ -11,6 +11,27 @@
   "cases": [
     {
       "caseRef": "TC-1042",
+      "template": "community-college",
+      "studentRef": "DS-0001",
+      "studentName": "Demo Student A",
+      "studentEmail": "student.a@demo.local",
+      "program": "Computer Science",
+      "startDate": "2026-09-02",
+      "courses": [
+        { "institution": "Bay State Community College (synthetic)", "code": "CSC 110", "title": "Introduction to Programming", "credits": 3, "grade": "A", "term": "Fall 2024" },
+        { "institution": "Bay State Community College (synthetic)", "code": "MAT 210", "title": "Calculus I", "credits": 4, "grade": "B+", "term": "Fall 2024" },
+        { "institution": "Bay State Community College (synthetic)", "code": "PSY 101", "title": "Introduction to Psychology", "credits": 3, "grade": "A-", "term": "Spring 2025" },
+        {
+          "institution": "Bay State Community College (synthetic)", "code": "CSC 215", "title": "Discrete Structures for Computing", "credits": 3, "grade": "B", "term": "Spring 2025",
+          "syllabus": "Course outcomes: use propositional and predicate logic; write direct, contrapositive and induction proofs; work with sets, functions and relations; solve counting problems with permutations and combinations; reason about graphs and trees. Weekly problem sets and two exams."
+        },
+        { "institution": "Bay State Community College (synthetic)", "code": "CSC 230", "title": "Computer Organization and C Programming", "credits": 3, "grade": "B+", "term": "Spring 2025" },
+        { "institution": "Pacific Coast College (synthetic)", "code": "CS 140", "title": "Data Structures and Algorithms", "credits": 4, "grade": "B", "term": "Winter 2024" }
+      ]
+    },
+    {
+      "caseRef": "TC-2001",
+      "template": "northeastern",
       "studentRef": "DS-0001",
       "studentName": "Demo Student A",
       "studentEmail": "student.a@demo.local",
@@ -30,7 +51,7 @@
           "description": "Introduction to the theory of computation.",
           "syllabus": "Topics: finite automata and regular languages, context-free grammars and pushdown automata, Turing machines, decidability, reductions, and complexity classes P and NP."
         },
-        { "institution": "Pacific Coast College (synthetic)", "code": "CS 140", "title": "Data Structures and Algorithms", "credits": 4, "grade": "B", "term": "Winter 2024" }
+        { "institution": "Pacific Coast College (synthetic)", "code": "MATH 3A", "title": "Calculus I", "credits": 4, "grade": "D", "term": "Winter 2024" }
       ]
     }
   ]

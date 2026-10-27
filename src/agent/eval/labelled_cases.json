@@ -1,0 +1,2978 @@
+[
+  {
+    "courseId": "eval-new-phil-ua-160",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "PHIL-UA 160",
+      "title": "Reasoning and Argumentation",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Argument analysis, formal proofs, fallacies and propositional logic.",
+      "learningOutcomes": "Explain argument analysis. Apply formal proofs. Analyse fallacies. Use propositional logic."
+    },
+    "syllabusText": "Argument analysis, formal proofs, fallacies and propositional logic. Learning outcomes: Explain argument analysis. Apply formal proofs. Analyse fallacies. Use propositional logic.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:PHIL-UA 160",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PH 160"
+  },
+  {
+    "courseId": "eval-northeastern-hist-2520",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "HIST 2520",
+      "title": "The United States since 1865",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Reconstruction, industrialisation, civil rights and world wars.",
+      "learningOutcomes": "Explain Reconstruction. Apply industrialisation. Analyse civil rights. Use world wars."
+    },
+    "syllabusText": "Reconstruction, industrialisation, civil rights and world wars. Learning outcomes: Explain Reconstruction. Apply industrialisation. Analyse civil rights. Use world wars.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:HIST 2520",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS HI 152"
+  },
+  {
+    "courseId": "eval-northeastern-cs-4520",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 4520",
+      "title": "Operating Systems",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "File systems, scheduling, processes and threads, memory management and synchronisation.",
+      "learningOutcomes": "Explain file systems. Apply scheduling. Analyse processes and threads. Use memory management. Evaluate synchronisation."
+    },
+    "syllabusText": "File systems, scheduling, processes and threads, memory management and synchronisation. Learning outcomes: Explain file systems. Apply scheduling. Analyse processes and threads. Use memory management. Evaluate synchronisation.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 4520",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 552"
+  },
+  {
+    "courseId": "eval-new-csci-ua-538",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 538",
+      "title": "Fundamentals of Cryptography",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Proofs of security, encryption, hash functions, digital signatures and pseudorandomness.",
+      "learningOutcomes": "Explain proofs of security. Apply encryption. Analyse hash functions. Use digital signatures. Evaluate pseudorandomness."
+    },
+    "syllabusText": "Proofs of security, encryption, hash functions, digital signatures and pseudorandomness. Learning outcomes: Explain proofs of security. Apply encryption. Analyse hash functions. Use digital signatures. Evaluate pseudorandomness.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 538",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 538"
+  },
+  {
+    "courseId": "eval-northeastern-cs-4250",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 4250",
+      "title": "Compiler Design",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Parsing, code generation, semantic analysis and lexical analysis.",
+      "learningOutcomes": "Explain parsing. Apply code generation. Analyse semantic analysis. Use lexical analysis."
+    },
+    "syllabusText": "Parsing, code generation, semantic analysis and lexical analysis. Learning outcomes: Explain parsing. Apply code generation. Analyse semantic analysis. Use lexical analysis.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 4250",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 525"
+  },
+  {
+    "courseId": "eval-northeastern-cs-3150",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 3150",
+      "title": "Parallel Computing",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "GPU programming, multicore programming with threads and message passing with MPI.",
+      "learningOutcomes": "Explain GPU programming. Apply multicore programming with threads. Analyse message passing with MPI."
+    },
+    "syllabusText": "GPU programming, multicore programming with threads and message passing with MPI. Learning outcomes: Explain GPU programming. Apply multicore programming with threads. Analyse message passing with MPI.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 3150",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 415"
+  },
+  {
+    "courseId": "eval-new-csci-ua-518",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 518",
+      "title": "Computational Biology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Genome assembly, phylogenetics, sequence alignment and biological data analysis.",
+      "learningOutcomes": "Explain genome assembly. Apply phylogenetics. Analyse sequence alignment. Use biological data analysis."
+    },
+    "syllabusText": "Genome assembly, phylogenetics, sequence alignment and biological data analysis. Learning outcomes: Explain genome assembly. Apply phylogenetics. Analyse sequence alignment. Use biological data analysis.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 518",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 518"
+  },
+  {
+    "courseId": "eval-northeastern-phys-3130",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "PHYS 3130",
+      "title": "Modern Physics",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Special relativity, nuclear physics, atomic structure and quantum phenomena.",
+      "learningOutcomes": "Explain special relativity. Apply nuclear physics. Analyse atomic structure. Use quantum phenomena."
+    },
+    "syllabusText": "Special relativity, nuclear physics, atomic structure and quantum phenomena. Learning outcomes: Explain special relativity. Apply nuclear physics. Analyse atomic structure. Use quantum phenomena.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:PHYS 3130",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PY 313"
+  },
+  {
+    "courseId": "eval-northeastern-cs-4380",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 4380",
+      "title": "Fundamentals of Cryptography",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Pseudorandomness, proofs of security, encryption, digital signatures and hash functions.",
+      "learningOutcomes": "Explain pseudorandomness. Apply proofs of security. Analyse encryption. Use digital signatures. Evaluate hash functions."
+    },
+    "syllabusText": "Pseudorandomness, proofs of security, encryption, digital signatures and hash functions. Learning outcomes: Explain pseudorandomness. Apply proofs of security. Analyse encryption. Use digital signatures. Evaluate hash functions.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 4380",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 538"
+  },
+  {
+    "courseId": "eval-new-csci-ua-596",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 596",
+      "title": "Natural Language Processing",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Word embeddings, parsing, sentiment analysis, text processing and language models.",
+      "learningOutcomes": "Explain word embeddings. Apply parsing. Analyse sentiment analysis. Use text processing. Evaluate language models."
+    },
+    "syllabusText": "Word embeddings, parsing, sentiment analysis, text processing and language models. Learning outcomes: Explain word embeddings. Apply parsing. Analyse sentiment analysis. Use text processing. Evaluate language models.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 596",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 596"
+  },
+  {
+    "courseId": "eval-new-span-ua-112",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "SPAN-UA 112",
+      "title": "Second-Semester Spanish",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Reading short texts, writing paragraphs and Spanish past tenses.",
+      "learningOutcomes": "Explain reading short texts. Apply writing paragraphs. Analyse Spanish past tenses."
+    },
+    "syllabusText": "Reading short texts, writing paragraphs and Spanish past tenses. Learning outcomes: Explain reading short texts. Apply writing paragraphs. Analyse Spanish past tenses.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:SPAN-UA 112",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS LS 112"
+  },
+  {
+    "courseId": "eval-new-csci-ua-591",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 591",
+      "title": "Robotics",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Motion planning, feedback control, robot kinematics and sensors.",
+      "learningOutcomes": "Explain motion planning. Apply feedback control. Analyse robot kinematics. Use sensors."
+    },
+    "syllabusText": "Motion planning, feedback control, robot kinematics and sensors. Learning outcomes: Explain motion planning. Apply feedback control. Analyse robot kinematics. Use sensors.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 591",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 591"
+  },
+  {
+    "courseId": "eval-new-csci-ua-391",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 391",
+      "title": "Mobile Application Development",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Android and iOS user interfaces, mobile application development, app lifecycle and publishing and device sensors.",
+      "learningOutcomes": "Explain Android and iOS user interfaces. Apply mobile application development. Analyse app lifecycle and publishing. Use device sensors."
+    },
+    "syllabusText": "Android and iOS user interfaces, mobile application development, app lifecycle and publishing and device sensors. Learning outcomes: Explain Android and iOS user interfaces. Apply mobile application development. Analyse app lifecycle and publishing. Use device sensors.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 391",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 391"
+  },
+  {
+    "courseId": "eval-northeastern-cs-2080",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 2080",
+      "title": "Application Programming",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Graphical user interfaces, files and text processing and building applications in Python.",
+      "learningOutcomes": "Explain graphical user interfaces. Apply files and text processing. Analyse building applications in Python."
+    },
+    "syllabusText": "Graphical user interfaces, files and text processing and building applications in Python. Learning outcomes: Explain graphical user interfaces. Apply files and text processing. Analyse building applications in Python.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 2080",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 108"
+  },
+  {
+    "courseId": "eval-northeastern-cs-2100",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 2100",
+      "title": "Computer Systems",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Computer organisation and systems programming in C and assembly, data representation, memory and caches and the operating system interface.",
+      "learningOutcomes": "Explain computer organisation and systems programming in C and assembly. Apply data representation. Analyse memory and caches. Use the operating system interface."
+    },
+    "syllabusText": "Computer organisation and systems programming in C and assembly, data representation, memory and caches and the operating system interface. Learning outcomes: Explain computer organisation and systems programming in C and assembly. Apply data representation. Analyse memory and caches. Use the operating system interface.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 2100",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 210"
+  },
+  {
+    "courseId": "eval-northeastern-cs-4620",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 4620",
+      "title": "Big Data Systems",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Large-scale data pipelines, MapReduce and stream processing.",
+      "learningOutcomes": "Explain large-scale data pipelines. Apply MapReduce. Analyse stream processing."
+    },
+    "syllabusText": "Large-scale data pipelines, MapReduce and stream processing. Learning outcomes: Explain large-scale data pipelines. Apply MapReduce. Analyse stream processing.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 4620",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 562"
+  },
+  {
+    "courseId": "eval-new-csci-ua-411",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 411",
+      "title": "Software Engineering",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Design patterns, requirements and design, agile teams and version control and testing.",
+      "learningOutcomes": "Explain design patterns. Apply requirements and design. Analyse agile teams and version control. Use testing."
+    },
+    "syllabusText": "Design patterns, requirements and design, agile teams and version control and testing. Learning outcomes: Explain design patterns. Apply requirements and design. Analyse agile teams and version control. Use testing.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 411",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 411"
+  },
+  {
+    "courseId": "eval-new-chem-ua-102",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CHEM-UA 102",
+      "title": "General Chemistry II",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Thermodynamics, chemical equilibrium, acids and bases and kinetics.",
+      "learningOutcomes": "Explain thermodynamics. Apply chemical equilibrium. Analyse acids and bases. Use kinetics."
+    },
+    "syllabusText": "Thermodynamics, chemical equilibrium, acids and bases and kinetics. Learning outcomes: Explain thermodynamics. Apply chemical equilibrium. Analyse acids and bases. Use kinetics.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CHEM-UA 102",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CH 102"
+  },
+  {
+    "courseId": "eval-northeastern-eece-3010",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "EECE 3010",
+      "title": "Signals and Systems",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Sampling, continuous and discrete signals, linear systems and Fourier analysis.",
+      "learningOutcomes": "Explain sampling. Apply continuous and discrete signals. Analyse linear systems. Use Fourier analysis."
+    },
+    "syllabusText": "Sampling, continuous and discrete signals, linear systems and Fourier analysis. Learning outcomes: Explain sampling. Apply continuous and discrete signals. Analyse linear systems. Use Fourier analysis.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:EECE 3010",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "ENG EC 401"
+  },
+  {
+    "courseId": "eval-new-biol-ua-108",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "BIOL-UA 108",
+      "title": "Biology 2",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Cell structure and function, genetics and molecular biology.",
+      "learningOutcomes": "Explain cell structure and function. Apply genetics. Analyse molecular biology."
+    },
+    "syllabusText": "Cell structure and function, genetics and molecular biology. Learning outcomes: Explain cell structure and function. Apply genetics. Analyse molecular biology.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:BIOL-UA 108",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS BI 108"
+  },
+  {
+    "courseId": "eval-northeastern-cs-3600",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 3600",
+      "title": "Foundations of Database Systems",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "SQL, transactions and query processing, indexing, the relational model and normalisation.",
+      "learningOutcomes": "Explain SQL. Apply transactions and query processing. Analyse indexing. Use the relational model. Evaluate normalisation."
+    },
+    "syllabusText": "SQL, transactions and query processing, indexing, the relational model and normalisation. Learning outcomes: Explain SQL. Apply transactions and query processing. Analyse indexing. Use the relational model. Evaluate normalisation.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 3600",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 460"
+  },
+  {
+    "courseId": "eval-new-csci-ua-595",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 595",
+      "title": "Human-Computer Interaction",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Interface prototyping, user-centred design, usability testing and accessibility.",
+      "learningOutcomes": "Explain interface prototyping. Apply user-centred design. Analyse usability testing. Use accessibility."
+    },
+    "syllabusText": "Interface prototyping, user-centred design, usability testing and accessibility. Learning outcomes: Explain interface prototyping. Apply user-centred design. Analyse usability testing. Use accessibility.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 595",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 595"
+  },
+  {
+    "courseId": "eval-northeastern-cs-3300",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 3300",
+      "title": "Introduction to Analysis of Algorithms",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Divide and conquer and greedy algorithms, memoisation techniques, big-O notation and graph algorithms and NP-completeness.",
+      "learningOutcomes": "Explain divide and conquer and greedy algorithms. Apply memoisation techniques. Analyse big-O notation. Use graph algorithms and NP-completeness."
+    },
+    "syllabusText": "Divide and conquer and greedy algorithms, memoisation techniques, big-O notation and graph algorithms and NP-completeness. Learning outcomes: Explain divide and conquer and greedy algorithms. Apply memoisation techniques. Analyse big-O notation. Use graph algorithms and NP-completeness.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 3300",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 330"
+  },
+  {
+    "courseId": "eval-new-biol-ua-213",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "BIOL-UA 213",
+      "title": "Intensive Cell Biology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Protein trafficking, cell motility, research techniques and signal transduction.",
+      "learningOutcomes": "Explain protein trafficking. Apply cell motility. Analyse research techniques. Use signal transduction."
+    },
+    "syllabusText": "Protein trafficking, cell motility, research techniques and signal transduction. Learning outcomes: Explain protein trafficking. Apply cell motility. Analyse research techniques. Use signal transduction.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:BIOL-UA 213",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS BI 213"
+  },
+  {
+    "courseId": "eval-new-math-ua-581",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "MATH-UA 581",
+      "title": "Probability for Statistics",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Moment generating functions, the central limit theorem, convergence and transformations of random variables.",
+      "learningOutcomes": "Explain moment generating functions. Apply the central limit theorem. Analyse convergence. Use transformations of random variables."
+    },
+    "syllabusText": "Moment generating functions, the central limit theorem, convergence and transformations of random variables. Learning outcomes: Explain moment generating functions. Apply the central limit theorem. Analyse convergence. Use transformations of random variables.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:MATH-UA 581",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS MA 581"
+  },
+  {
+    "courseId": "eval-northeastern-cs-3801",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 3801",
+      "title": "Foundations of Computer Graphics",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Geometric transformations, rasterisation, the rendering pipeline, shading and lighting and OpenGL.",
+      "learningOutcomes": "Explain geometric transformations. Apply rasterisation. Analyse the rendering pipeline. Use shading and lighting. Evaluate OpenGL."
+    },
+    "syllabusText": "Geometric transformations, rasterisation, the rendering pipeline, shading and lighting and OpenGL. Learning outcomes: Explain geometric transformations. Apply rasterisation. Analyse the rendering pipeline. Use shading and lighting. Evaluate OpenGL.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 3801",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 480"
+  },
+  {
+    "courseId": "eval-new-econ-ua-204",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "ECON-UA 204",
+      "title": "Empirical Economics 2",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Econometric software, causal inference and multiple regression.",
+      "learningOutcomes": "Explain econometric software. Apply causal inference. Analyse multiple regression."
+    },
+    "syllabusText": "Econometric software, causal inference and multiple regression. Learning outcomes: Explain econometric software. Apply causal inference. Analyse multiple regression.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:ECON-UA 204",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS EC 204"
+  },
+  {
+    "courseId": "eval-new-phil-ua-251",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "PHIL-UA 251",
+      "title": "Ethics",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Deontology, utilitarianism, moral theories and applied ethics.",
+      "learningOutcomes": "Explain deontology. Apply utilitarianism. Analyse moral theories. Use applied ethics."
+    },
+    "syllabusText": "Deontology, utilitarianism, moral theories and applied ethics. Learning outcomes: Explain deontology. Apply utilitarianism. Analyse moral theories. Use applied ethics.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:PHIL-UA 251",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PH 251"
+  },
+  {
+    "courseId": "eval-northeastern-math-4550",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "MATH 4550",
+      "title": "Numerical Analysis",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Floating point error, numerical linear algebra, interpolation, root finding and numerical integration.",
+      "learningOutcomes": "Explain floating point error. Apply numerical linear algebra. Analyse interpolation. Use root finding. Evaluate numerical integration."
+    },
+    "syllabusText": "Floating point error, numerical linear algebra, interpolation, root finding and numerical integration. Learning outcomes: Explain floating point error. Apply numerical linear algebra. Analyse interpolation. Use root finding. Evaluate numerical integration.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:MATH 4550",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS MA 555"
+  },
+  {
+    "courseId": "eval-northeastern-ge-2250",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "GE 2250",
+      "title": "Principles of Programming for Engineers",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Engineering applications, plotting data and MATLAB programming.",
+      "learningOutcomes": "Explain engineering applications. Apply plotting data. Analyse MATLAB programming."
+    },
+    "syllabusText": "Engineering applications, plotting data and MATLAB programming. Learning outcomes: Explain engineering applications. Apply plotting data. Analyse MATLAB programming.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:GE 2250",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "ENG EK 125"
+  },
+  {
+    "courseId": "eval-new-csci-ua-330",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 330",
+      "title": "Introduction to Analysis of Algorithms",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Memoisation techniques, divide and conquer and greedy algorithms, design and algorithm efficiency and asymptotic analysis.",
+      "learningOutcomes": "Explain memoisation techniques. Apply divide and conquer and greedy algorithms. Analyse design and algorithm efficiency. Use asymptotic analysis."
+    },
+    "syllabusText": "Memoisation techniques, divide and conquer and greedy algorithms, design and algorithm efficiency and asymptotic analysis. Learning outcomes: Explain memoisation techniques. Apply divide and conquer and greedy algorithms. Analyse design and algorithm efficiency. Use asymptotic analysis.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 330",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 330"
+  },
+  {
+    "courseId": "eval-northeastern-phil-2600",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "PHIL 2600",
+      "title": "Reasoning and Argumentation",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Argument analysis, formal proofs, propositional logic and fallacies.",
+      "learningOutcomes": "Explain argument analysis. Apply formal proofs. Analyse propositional logic. Use fallacies."
+    },
+    "syllabusText": "Argument analysis, formal proofs, propositional logic and fallacies. Learning outcomes: Explain argument analysis. Apply formal proofs. Analyse propositional logic. Use fallacies.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:PHIL 2600",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PH 160"
+  },
+  {
+    "courseId": "eval-northeastern-arth-2110",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "ARTH 2110",
+      "title": "Survey of Western Art",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Renaissance, ancient art and modern art.",
+      "learningOutcomes": "Explain Renaissance. Apply ancient art. Analyse modern art."
+    },
+    "syllabusText": "Renaissance, ancient art and modern art. Learning outcomes: Explain Renaissance. Apply ancient art. Analyse modern art.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:ARTH 2110",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS AH 111"
+  },
+  {
+    "courseId": "eval-new-csci-ua-549",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 549",
+      "title": "Computer Architecture",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Multiprocessors, instruction set architecture, memory hierarchy and pipelining.",
+      "learningOutcomes": "Explain multiprocessors. Apply instruction set architecture. Analyse memory hierarchy. Use pipelining."
+    },
+    "syllabusText": "Multiprocessors, instruction set architecture, memory hierarchy and pipelining. Learning outcomes: Explain multiprocessors. Apply instruction set architecture. Analyse memory hierarchy. Use pipelining.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 549",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 549"
+  },
+  {
+    "courseId": "eval-new-psych-ua-241",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "PSYCH-UA 241",
+      "title": "Developmental Psychology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Cognitive development, biological development, social and emotional development and human development from infancy through adolescence.",
+      "learningOutcomes": "Explain cognitive development. Apply biological development. Analyse social and emotional development. Use human development from infancy through adolescence."
+    },
+    "syllabusText": "Cognitive development, biological development, social and emotional development and human development from infancy through adolescence. Learning outcomes: Explain cognitive development. Apply biological development. Analyse social and emotional development. Use human development from infancy through adolescence.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:PSYCH-UA 241",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PS 241"
+  },
+  {
+    "courseId": "eval-northeastern-math-2230",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "MATH 2230",
+      "title": "Calculus I",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "The fundamental theorem of calculus, limits and continuity, applications of differentiation and rates of change.",
+      "learningOutcomes": "Explain the fundamental theorem of calculus. Apply limits and continuity. Analyse applications of differentiation. Use rates of change."
+    },
+    "syllabusText": "The fundamental theorem of calculus, limits and continuity, applications of differentiation and rates of change. Learning outcomes: Explain the fundamental theorem of calculus. Apply limits and continuity. Analyse applications of differentiation. Use rates of change.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:MATH 2230",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS MA 123"
+  },
+  {
+    "courseId": "eval-new-ece-uy-327",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "ECE-UY 327",
+      "title": "Foundations of Software Engineering",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Software design, debugging, team software projects and C++ programming.",
+      "learningOutcomes": "Explain software design. Apply debugging. Analyse team software projects. Use C++ programming."
+    },
+    "syllabusText": "Software design, debugging, team software projects and C++ programming. Learning outcomes: Explain software design. Apply debugging. Analyse team software projects. Use C++ programming.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:ECE-UY 327",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "ENG EC 327"
+  },
+  {
+    "courseId": "eval-new-music-ua-101",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "MUSIC-UA 101",
+      "title": "Fundamentals of Music",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Scales and intervals, rhythm, notation and ear training.",
+      "learningOutcomes": "Explain scales and intervals. Apply rhythm. Analyse notation. Use ear training."
+    },
+    "syllabusText": "Scales and intervals, rhythm, notation and ear training. Learning outcomes: Explain scales and intervals. Apply rhythm. Analyse notation. Use ear training.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:MUSIC-UA 101",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CFA MU 101"
+  },
+  {
+    "courseId": "eval-northeastern-phil-2510",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "PHIL 2510",
+      "title": "Ethics",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Applied ethics, utilitarianism, moral theories and deontology.",
+      "learningOutcomes": "Explain applied ethics. Apply utilitarianism. Analyse moral theories. Use deontology."
+    },
+    "syllabusText": "Applied ethics, utilitarianism, moral theories and deontology. Learning outcomes: Explain applied ethics. Apply utilitarianism. Analyse moral theories. Use deontology.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:PHIL 2510",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PH 251"
+  },
+  {
+    "courseId": "eval-northeastern-psyc-2310",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "PSYC 2310",
+      "title": "Social Psychology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Social influence, attitudes and group behaviour.",
+      "learningOutcomes": "Explain social influence. Apply attitudes. Analyse group behaviour."
+    },
+    "syllabusText": "Social influence, attitudes and group behaviour. Learning outcomes: Explain social influence. Apply attitudes. Analyse group behaviour.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:PSYC 2310",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PS 231"
+  },
+  {
+    "courseId": "eval-new-csci-ua-523",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 523",
+      "title": "Deep Learning",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Optimisation for training, convolutional networks, backpropagation, artificial neural models and recurrent networks.",
+      "learningOutcomes": "Explain optimisation for training. Apply convolutional networks. Analyse backpropagation. Use artificial neural models. Evaluate recurrent networks."
+    },
+    "syllabusText": "Optimisation for training, convolutional networks, backpropagation, artificial neural models and recurrent networks. Learning outcomes: Explain optimisation for training. Apply convolutional networks. Analyse backpropagation. Use artificial neural models. Evaluate recurrent networks.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 523",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 523"
+  },
+  {
+    "courseId": "eval-northeastern-psyc-3710",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "PSYC 3710",
+      "title": "Human-Computer Interaction Psychology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Usability, cognitive load, human perception and interfaces and experimental evaluation of interfaces.",
+      "learningOutcomes": "Explain usability. Apply cognitive load. Analyse human perception and interfaces. Use experimental evaluation of interfaces."
+    },
+    "syllabusText": "Usability, cognitive load, human perception and interfaces and experimental evaluation of interfaces. Learning outcomes: Explain usability. Apply cognitive load. Analyse human perception and interfaces. Use experimental evaluation of interfaces.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:PSYC 3710",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PS 371"
+  },
+  {
+    "courseId": "eval-northeastern-psyc-2110",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "PSYC 2110",
+      "title": "Introduction to Experimental Psychology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Measurement and statistics, ethics and scientific writing and research methods in psychology.",
+      "learningOutcomes": "Explain measurement and statistics. Apply ethics and scientific writing. Analyse research methods in psychology."
+    },
+    "syllabusText": "Measurement and statistics, ethics and scientific writing and research methods in psychology. Learning outcomes: Explain measurement and statistics. Apply ethics and scientific writing. Analyse research methods in psychology.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:PSYC 2110",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PS 211"
+  },
+  {
+    "courseId": "eval-new-math-ua-555",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "MATH-UA 555",
+      "title": "Numerical Analysis",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Numerical integration, interpolation, numerical linear algebra and floating point error.",
+      "learningOutcomes": "Explain numerical integration. Apply interpolation. Analyse numerical linear algebra. Use floating point error."
+    },
+    "syllabusText": "Numerical integration, interpolation, numerical linear algebra and floating point error. Learning outcomes: Explain numerical integration. Apply interpolation. Analyse numerical linear algebra. Use floating point error.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:MATH-UA 555",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS MA 555"
+  },
+  {
+    "courseId": "eval-new-expos-ua-415",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "EXPOS-UA 415",
+      "title": "Technical Writing",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Instructions and reports, writing for engineers and technical documentation.",
+      "learningOutcomes": "Explain instructions and reports. Apply writing for engineers. Analyse technical documentation."
+    },
+    "syllabusText": "Instructions and reports, writing for engineers and technical documentation. Learning outcomes: Explain instructions and reports. Apply writing for engineers. Analyse technical documentation.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:EXPOS-UA 415",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS WR 415"
+  },
+  {
+    "courseId": "eval-new-csci-ua-506",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 506",
+      "title": "Tools for Data Science",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Regression, visualisation, grouping methods, a high-level language data libraries and data cleaning.",
+      "learningOutcomes": "Explain regression. Apply visualisation. Analyse grouping methods. Use a high-level language data libraries. Evaluate data cleaning."
+    },
+    "syllabusText": "Regression, visualisation, grouping methods, a high-level language data libraries and data cleaning. Learning outcomes: Explain regression. Apply visualisation. Analyse grouping methods. Use a high-level language data libraries. Evaluate data cleaning.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 506",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 506"
+  },
+  {
+    "courseId": "eval-northeastern-cs-4160",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 4160",
+      "title": "Reinforcement Learning",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Exploration, Markov decision processes and value iteration.",
+      "learningOutcomes": "Explain exploration. Apply Markov decision processes. Analyse value iteration."
+    },
+    "syllabusText": "Exploration, Markov decision processes and value iteration. Learning outcomes: Explain exploration. Apply Markov decision processes. Analyse value iteration.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 4160",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 516"
+  },
+  {
+    "courseId": "eval-new-csci-ua-415",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 415",
+      "title": "Parallel Computing",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Multicore programming with threads, GPU programming, parallel algorithms and message passing with MPI.",
+      "learningOutcomes": "Explain multicore programming with threads. Apply GPU programming. Analyse parallel algorithms. Use message passing with MPI."
+    },
+    "syllabusText": "Multicore programming with threads, GPU programming, parallel algorithms and message passing with MPI. Learning outcomes: Explain multicore programming with threads. Apply GPU programming. Analyse parallel algorithms. Use message passing with MPI.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 415",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 415"
+  },
+  {
+    "courseId": "eval-new-chem-ua-101",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CHEM-UA 101",
+      "title": "General Chemistry I",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Chemical bonding, laboratory techniques, atomic structure and stoichiometry.",
+      "learningOutcomes": "Explain chemical bonding. Apply laboratory techniques. Analyse atomic structure. Use stoichiometry."
+    },
+    "syllabusText": "Chemical bonding, laboratory techniques, atomic structure and stoichiometry. Learning outcomes: Explain chemical bonding. Apply laboratory techniques. Analyse atomic structure. Use stoichiometry.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CHEM-UA 101",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CH 101"
+  },
+  {
+    "courseId": "eval-northeastern-cs-4110",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 4110",
+      "title": "Object-Oriented Software Principles",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Design patterns in an object-oriented language, UML and object-oriented design.",
+      "learningOutcomes": "Explain design patterns in an object-oriented language. Apply UML. Analyse object-oriented design."
+    },
+    "syllabusText": "Design patterns in an object-oriented language, UML and object-oriented design. Learning outcomes: Explain design patterns in an object-oriented language. Apply UML. Analyse object-oriented design.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 4110",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 511"
+  },
+  {
+    "courseId": "eval-northeastern-math-2160",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "MATH 2160",
+      "title": "Statistics II",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Categorical data, multiple regression, nonparametric tests and analysis of variance.",
+      "learningOutcomes": "Explain categorical data. Apply multiple regression. Analyse nonparametric tests. Use analysis of variance."
+    },
+    "syllabusText": "Categorical data, multiple regression, nonparametric tests and analysis of variance. Learning outcomes: Explain categorical data. Apply multiple regression. Analyse nonparametric tests. Use analysis of variance.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:MATH 2160",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS MA 116"
+  },
+  {
+    "courseId": "eval-new-biol-ua-206",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "BIOL-UA 206",
+      "title": "Genetics",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Mendelian inheritance, mutation, gene expression and population genetics.",
+      "learningOutcomes": "Explain Mendelian inheritance. Apply mutation. Analyse gene expression. Use population genetics."
+    },
+    "syllabusText": "Mendelian inheritance, mutation, gene expression and population genetics. Learning outcomes: Explain Mendelian inheritance. Apply mutation. Analyse gene expression. Use population genetics.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:BIOL-UA 206",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS BI 206"
+  },
+  {
+    "courseId": "eval-new-csci-ua-365",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 365",
+      "title": "Foundations of Data Science",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Probability and statistics for data, working with real datasets, statistical inference and linear models.",
+      "learningOutcomes": "Explain probability and statistics for data. Apply working with real datasets. Analyse statistical inference. Use linear models."
+    },
+    "syllabusText": "Probability and statistics for data, working with real datasets, statistical inference and linear models. Learning outcomes: Explain probability and statistics for data. Apply working with real datasets. Analyse statistical inference. Use linear models.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 365",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 365"
+  },
+  {
+    "courseId": "eval-new-csci-ua-558",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CSCI-UA 558",
+      "title": "Network Security",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Virtual private networks, network attacks, firewalls, TLS and intrusion detection.",
+      "learningOutcomes": "Explain virtual private networks. Apply network attacks. Analyse firewalls. Use TLS. Evaluate intrusion detection."
+    },
+    "syllabusText": "Virtual private networks, network attacks, firewalls, TLS and intrusion detection. Learning outcomes: Explain virtual private networks. Apply network attacks. Analyse firewalls. Use TLS. Evaluate intrusion detection.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CSCI-UA 558",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 558"
+  },
+  {
+    "courseId": "eval-northeastern-biol-2080",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "BIOL 2080",
+      "title": "Biology 2",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Genetics, molecular biology, cell structure and function and metabolism with lab sessions.",
+      "learningOutcomes": "Explain genetics. Apply molecular biology. Analyse cell structure and function. Use metabolism with lab sessions."
+    },
+    "syllabusText": "Genetics, molecular biology, cell structure and function and metabolism with lab sessions. Learning outcomes: Explain genetics. Apply molecular biology. Analyse cell structure and function. Use metabolism with lab sessions.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:BIOL 2080",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS BI 108"
+  },
+  {
+    "courseId": "eval-northeastern-psyc-2610",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "PSYC 2610",
+      "title": "Abnormal Psychology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Research on psychopathology, treatment approaches, classification of disorders and anxiety and mood disorders.",
+      "learningOutcomes": "Explain research on psychopathology. Apply treatment approaches. Analyse classification of disorders. Use anxiety and mood disorders."
+    },
+    "syllabusText": "Research on psychopathology, treatment approaches, classification of disorders and anxiety and mood disorders. Learning outcomes: Explain research on psychopathology. Apply treatment approaches. Analyse classification of disorders. Use anxiety and mood disorders.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:PSYC 2610",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PS 261"
+  },
+  {
+    "courseId": "eval-northeastern-pols-2510",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "POLS 2510",
+      "title": "Principles of International Relations",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "The state system, international organisations, war and peace and global economy.",
+      "learningOutcomes": "Explain the state system. Apply international organisations. Analyse war and peace. Use global economy."
+    },
+    "syllabusText": "The state system, international organisations, war and peace and global economy. Learning outcomes: Explain the state system. Apply international organisations. Analyse war and peace. Use global economy.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:POLS 2510",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PO 151"
+  },
+  {
+    "courseId": "eval-new-phys-ua-252",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "PHYS-UA 252",
+      "title": "Principles of Physics II",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Calculus-based electricity and magnetism, electromagnetic waves and Maxwell's equations.",
+      "learningOutcomes": "Explain calculus-based electricity and magnetism. Apply electromagnetic waves. Analyse Maxwell's equations."
+    },
+    "syllabusText": "Calculus-based electricity and magnetism, electromagnetic waves and Maxwell's equations. Learning outcomes: Explain calculus-based electricity and magnetism. Apply electromagnetic waves. Analyse Maxwell's equations.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:PHYS-UA 252",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PY 252"
+  },
+  {
+    "courseId": "eval-northeastern-math-2150",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "MATH 2150",
+      "title": "Statistics I",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Significance testing, simple regression, probability models, estimation and data description.",
+      "learningOutcomes": "Explain significance testing. Apply simple regression. Analyse probability models. Use estimation. Evaluate data description."
+    },
+    "syllabusText": "Significance testing, simple regression, probability models, estimation and data description. Learning outcomes: Explain significance testing. Apply simple regression. Analyse probability models. Use estimation. Evaluate data description.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:MATH 2150",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS MA 115"
+  },
+  {
+    "courseId": "eval-northeastern-cs-4660",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 4660",
+      "title": "Ethics of Computing",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Professional responsibility, technology policy, algorithmic fairness and privacy.",
+      "learningOutcomes": "Explain professional responsibility. Apply technology policy. Analyse algorithmic fairness. Use privacy."
+    },
+    "syllabusText": "Professional responsibility, technology policy, algorithmic fairness and privacy. Learning outcomes: Explain professional responsibility. Apply technology policy. Analyse algorithmic fairness. Use privacy.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 4660",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 566"
+  },
+  {
+    "courseId": "eval-northeastern-engl-2201",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "ENGL 2201",
+      "title": "Shakespeare",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Elizabethan theatre, performance, Shakespeare's plays and literary criticism.",
+      "learningOutcomes": "Explain Elizabethan theatre. Apply performance. Analyse Shakespeare's plays. Use literary criticism."
+    },
+    "syllabusText": "Elizabethan theatre, performance, Shakespeare's plays and literary criticism. Learning outcomes: Explain Elizabethan theatre. Apply performance. Analyse Shakespeare's plays. Use literary criticism.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:ENGL 2201",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS EN 220"
+  },
+  {
+    "courseId": "eval-northeastern-cs-3540",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 3540",
+      "title": "Embedded Systems",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Microcontrollers, real-time systems, low-level C programming and sensors and actuators.",
+      "learningOutcomes": "Explain microcontrollers. Apply real-time systems. Analyse low-level C programming. Use sensors and actuators."
+    },
+    "syllabusText": "Microcontrollers, real-time systems, low-level C programming and sensors and actuators. Learning outcomes: Explain microcontrollers. Apply real-time systems. Analyse low-level C programming. Use sensors and actuators.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 3540",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 454"
+  },
+  {
+    "courseId": "eval-new-phys-ua-313",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "PHYS-UA 313",
+      "title": "Modern Physics",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Quantum phenomena, nuclear physics, special relativity and atomic structure.",
+      "learningOutcomes": "Explain quantum phenomena. Apply nuclear physics. Analyse special relativity. Use atomic structure."
+    },
+    "syllabusText": "Quantum phenomena, nuclear physics, special relativity and atomic structure. Learning outcomes: Explain quantum phenomena. Apply nuclear physics. Analyse special relativity. Use atomic structure.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:PHYS-UA 313",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS PY 313"
+  },
+  {
+    "courseId": "eval-northeastern-cs-2310",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 2310",
+      "title": "Combinatoric Structures",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Discrete mathematics for computer science, logic, sets, functions and relations, trees and networks, proof techniques and induction and counting and combinatorics.",
+      "learningOutcomes": "Explain discrete mathematics for computer science. Apply logic, sets, functions and relations. Analyse trees and networks. Use proof techniques and induction. Evaluate counting and combinatorics."
+    },
+    "syllabusText": "Discrete mathematics for computer science, logic, sets, functions and relations, trees and networks, proof techniques and induction and counting and combinatorics. Learning outcomes: Explain discrete mathematics for computer science. Apply logic, sets, functions and relations. Analyse trees and networks. Use proof techniques and induction. Evaluate counting and combinatorics.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 2310",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 131"
+  },
+  {
+    "courseId": "eval-northeastern-spns-2110",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "SPNS 2110",
+      "title": "First-Semester Spanish",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Spanish pronunciation, basic grammar, Hispanic cultures and everyday conversation.",
+      "learningOutcomes": "Explain Spanish pronunciation. Apply basic grammar. Analyse Hispanic cultures. Use everyday conversation."
+    },
+    "syllabusText": "Spanish pronunciation, basic grammar, Hispanic cultures and everyday conversation. Learning outcomes: Explain Spanish pronunciation. Apply basic grammar. Analyse Hispanic cultures. Use everyday conversation.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:SPNS 2110",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS LS 111"
+  },
+  {
+    "courseId": "eval-new-fren-ua-111",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "FREN-UA 111",
+      "title": "First-Semester French",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Everyday conversation, francophone cultures, French pronunciation and basic grammar.",
+      "learningOutcomes": "Explain everyday conversation. Apply francophone cultures. Analyse French pronunciation. Use basic grammar."
+    },
+    "syllabusText": "Everyday conversation, francophone cultures, French pronunciation and basic grammar. Learning outcomes: Explain everyday conversation. Apply francophone cultures. Analyse French pronunciation. Use basic grammar.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:FREN-UA 111",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS LF 111"
+  },
+  {
+    "courseId": "eval-new-biol-ua-225",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "BIOL-UA 225",
+      "title": "Behavioural Biology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Animal behaviour, evolution of behaviour, field methods and neuroethology.",
+      "learningOutcomes": "Explain animal behaviour. Apply evolution of behaviour. Analyse field methods. Use neuroethology."
+    },
+    "syllabusText": "Animal behaviour, evolution of behaviour, field methods and neuroethology. Learning outcomes: Explain animal behaviour. Apply evolution of behaviour. Analyse field methods. Use neuroethology.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:BIOL-UA 225",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS BI 225"
+  },
+  {
+    "courseId": "eval-northeastern-cs-4060",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "CS 4060",
+      "title": "Tools for Data Science",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Python data libraries, clustering, regression, data cleaning and visualisation.",
+      "learningOutcomes": "Explain Python data libraries. Apply clustering. Analyse regression. Use data cleaning. Evaluate visualisation."
+    },
+    "syllabusText": "Python data libraries, clustering, regression, data cleaning and visualisation. Learning outcomes: Explain Python data libraries. Apply clustering. Analyse regression. Use data cleaning. Evaluate visualisation.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:CS 4060",
+    "expectedOutcome": "BuEquivalent",
+    "expectedBuCourse": "CAS CS 506"
+  },
+  {
+    "courseId": "eval-northeastern-insh-3640",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 3640",
+      "title": "Co-op Preparation Seminar",
+      "credits": 2,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Resume writing, interview skills and workplace norms.",
+      "learningOutcomes": "Explain resume writing. Apply interview skills. Analyse workplace norms."
+    },
+    "syllabusText": "Resume writing, interview skills and workplace norms. Learning outcomes: Explain resume writing. Apply interview skills. Analyse workplace norms.",
+    "policyFlags": {
+      "convertedCredits": 2,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 3640",
+    "expectedOutcome": "NoCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-2980",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 2980",
+      "title": "College Success Strategies",
+      "credits": 2,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Study skills, time management and campus resources.",
+      "learningOutcomes": "Explain study skills. Apply time management. Analyse campus resources."
+    },
+    "syllabusText": "Study skills, time management and campus resources. Learning outcomes: Explain study skills. Apply time management. Analyse campus resources.",
+    "policyFlags": {
+      "convertedCredits": 2,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 2980",
+    "expectedOutcome": "NoCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-2880",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 2880",
+      "title": "Intermediate Algebra",
+      "credits": 2,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Linear equations, factoring polynomials, graphing and word problems.",
+      "learningOutcomes": "Explain linear equations. Apply factoring polynomials. Analyse graphing. Use word problems."
+    },
+    "syllabusText": "Linear equations, factoring polynomials, graphing and word problems. Learning outcomes: Explain linear equations. Apply factoring polynomials. Analyse graphing. Use word problems.",
+    "policyFlags": {
+      "convertedCredits": 2,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 2880",
+    "expectedOutcome": "NoCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-2650",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 2650",
+      "title": "Video Game Narrative",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Storytelling in games, character arcs and branching dialogue.",
+      "learningOutcomes": "Explain storytelling in games. Apply character arcs. Analyse branching dialogue."
+    },
+    "syllabusText": "Storytelling in games, character arcs and branching dialogue. Learning outcomes: Explain storytelling in games. Apply character arcs. Analyse branching dialogue.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 2650",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-3840",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 3840",
+      "title": "Music Technology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Digital audio workstations, MIDI and sound synthesis.",
+      "learningOutcomes": "Explain digital audio workstations. Apply MIDI. Analyse sound synthesis."
+    },
+    "syllabusText": "Digital audio workstations, MIDI and sound synthesis. Learning outcomes: Explain digital audio workstations. Apply MIDI. Analyse sound synthesis.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 3840",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-3720",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 3720",
+      "title": "Urban Ecology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Cities as ecosystems, green infrastructure and urban wildlife.",
+      "learningOutcomes": "Explain cities as ecosystems. Apply green infrastructure. Analyse urban wildlife."
+    },
+    "syllabusText": "Cities as ecosystems, green infrastructure and urban wildlife. Learning outcomes: Explain cities as ecosystems. Apply green infrastructure. Analyse urban wildlife.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 3720",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-2740",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 2740",
+      "title": "Entrepreneurship",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Startup formation, business models and venture financing.",
+      "learningOutcomes": "Explain startup formation. Apply business models. Analyse venture financing."
+    },
+    "syllabusText": "Startup formation, business models and venture financing. Learning outcomes: Explain startup formation. Apply business models. Analyse venture financing.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 2740",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-2230",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 2230",
+      "title": "Sports Analytics",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Performance metrics, sabermetrics and player evaluation.",
+      "learningOutcomes": "Explain performance metrics. Apply sabermetrics. Analyse player evaluation."
+    },
+    "syllabusText": "Performance metrics, sabermetrics and player evaluation. Learning outcomes: Explain performance metrics. Apply sabermetrics. Analyse player evaluation.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 2230",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-2970",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 2970",
+      "title": "Documentary Film",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Documentary history, interview technique and editing a short film.",
+      "learningOutcomes": "Explain documentary history. Apply interview technique. Analyse editing a short film."
+    },
+    "syllabusText": "Documentary history, interview technique and editing a short film. Learning outcomes: Explain documentary history. Apply interview technique. Analyse editing a short film.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 2970",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-2830",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 2830",
+      "title": "Marine Biology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Ocean ecosystems, marine invertebrates and coral reefs.",
+      "learningOutcomes": "Explain ocean ecosystems. Apply marine invertebrates. Analyse coral reefs."
+    },
+    "syllabusText": "Ocean ecosystems, marine invertebrates and coral reefs. Learning outcomes: Explain ocean ecosystems. Apply marine invertebrates. Analyse coral reefs.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 2830",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-2790",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 2790",
+      "title": "Public Speaking",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Speech preparation, delivery and persuasive speaking.",
+      "learningOutcomes": "Explain speech preparation. Apply delivery. Analyse persuasive speaking."
+    },
+    "syllabusText": "Speech preparation, delivery and persuasive speaking. Learning outcomes: Explain speech preparation. Apply delivery. Analyse persuasive speaking.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 2790",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-2670",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 2670",
+      "title": "Introduction to Accounting",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Financial statements, double-entry bookkeeping and accruals.",
+      "learningOutcomes": "Explain financial statements. Apply double-entry bookkeeping. Analyse accruals."
+    },
+    "syllabusText": "Financial statements, double-entry bookkeeping and accruals. Learning outcomes: Explain financial statements. Apply double-entry bookkeeping. Analyse accruals.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 2670",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-3040",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 3040",
+      "title": "Game Theory for Everyone",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Strategic games, Nash equilibrium and auctions.",
+      "learningOutcomes": "Explain strategic games. Apply Nash equilibrium. Analyse auctions."
+    },
+    "syllabusText": "Strategic games, Nash equilibrium and auctions. Learning outcomes: Explain strategic games. Apply Nash equilibrium. Analyse auctions.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 3040",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-3790",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 3790",
+      "title": "Digital Photography",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Exposure, composition and photo editing.",
+      "learningOutcomes": "Explain exposure. Apply composition. Analyse photo editing."
+    },
+    "syllabusText": "Exposure, composition and photo editing. Learning outcomes: Explain exposure. Apply composition. Analyse photo editing.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 3790",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-northeastern-insh-3710",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "Northeastern University",
+      "code": "INSH 3710",
+      "title": "Cybersecurity Policy",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Cyber law, national security and incident disclosure.",
+      "learningOutcomes": "Explain cyber law. Apply national security. Analyse incident disclosure."
+    },
+    "syllabusText": "Cyber law, national security and incident disclosure. Learning outcomes: Explain cyber law. Apply national security. Analyse incident disclosure.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:Northeastern University:INSH 3710",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-new-core-ua-424",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CORE-UA 424",
+      "title": "Co-op Preparation Seminar",
+      "credits": 2,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Resume writing, interview skills and workplace norms.",
+      "learningOutcomes": "Explain resume writing. Apply interview skills. Analyse workplace norms."
+    },
+    "syllabusText": "Resume writing, interview skills and workplace norms. Learning outcomes: Explain resume writing. Apply interview skills. Analyse workplace norms.",
+    "policyFlags": {
+      "convertedCredits": 2,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CORE-UA 424",
+    "expectedOutcome": "NoCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-new-core-ua-448",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CORE-UA 448",
+      "title": "College Success Strategies",
+      "credits": 2,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Study skills, time management and campus resources.",
+      "learningOutcomes": "Explain study skills. Apply time management. Analyse campus resources."
+    },
+    "syllabusText": "Study skills, time management and campus resources. Learning outcomes: Explain study skills. Apply time management. Analyse campus resources.",
+    "policyFlags": {
+      "convertedCredits": 2,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CORE-UA 448",
+    "expectedOutcome": "NoCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-new-core-ua-232",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CORE-UA 232",
+      "title": "Intermediate Algebra",
+      "credits": 2,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Linear equations, factoring polynomials, graphing and word problems.",
+      "learningOutcomes": "Explain linear equations. Apply factoring polynomials. Analyse graphing. Use word problems."
+    },
+    "syllabusText": "Linear equations, factoring polynomials, graphing and word problems. Learning outcomes: Explain linear equations. Apply factoring polynomials. Analyse graphing. Use word problems.",
+    "policyFlags": {
+      "convertedCredits": 2,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CORE-UA 232",
+    "expectedOutcome": "NoCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-new-core-ua-379",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CORE-UA 379",
+      "title": "Video Game Narrative",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Storytelling in games, character arcs and branching dialogue.",
+      "learningOutcomes": "Explain storytelling in games. Apply character arcs. Analyse branching dialogue."
+    },
+    "syllabusText": "Storytelling in games, character arcs and branching dialogue. Learning outcomes: Explain storytelling in games. Apply character arcs. Analyse branching dialogue.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CORE-UA 379",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-new-core-ua-215",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CORE-UA 215",
+      "title": "Music Technology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Digital audio workstations, MIDI and sound synthesis.",
+      "learningOutcomes": "Explain digital audio workstations. Apply MIDI. Analyse sound synthesis."
+    },
+    "syllabusText": "Digital audio workstations, MIDI and sound synthesis. Learning outcomes: Explain digital audio workstations. Apply MIDI. Analyse sound synthesis.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CORE-UA 215",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-new-core-ua-194",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CORE-UA 194",
+      "title": "Urban Ecology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Cities as ecosystems, green infrastructure and urban wildlife.",
+      "learningOutcomes": "Explain cities as ecosystems. Apply green infrastructure. Analyse urban wildlife."
+    },
+    "syllabusText": "Cities as ecosystems, green infrastructure and urban wildlife. Learning outcomes: Explain cities as ecosystems. Apply green infrastructure. Analyse urban wildlife.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CORE-UA 194",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-new-core-ua-451",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CORE-UA 451",
+      "title": "Entrepreneurship",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Startup formation, business models and venture financing.",
+      "learningOutcomes": "Explain startup formation. Apply business models. Analyse venture financing."
+    },
+    "syllabusText": "Startup formation, business models and venture financing. Learning outcomes: Explain startup formation. Apply business models. Analyse venture financing.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CORE-UA 451",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-new-core-ua-415",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CORE-UA 415",
+      "title": "Sports Analytics",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Performance metrics, sabermetrics and player evaluation.",
+      "learningOutcomes": "Explain performance metrics. Apply sabermetrics. Analyse player evaluation."
+    },
+    "syllabusText": "Performance metrics, sabermetrics and player evaluation. Learning outcomes: Explain performance metrics. Apply sabermetrics. Analyse player evaluation.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CORE-UA 415",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-new-core-ua-120",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CORE-UA 120",
+      "title": "Documentary Film",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Documentary history, interview technique and editing a short film.",
+      "learningOutcomes": "Explain documentary history. Apply interview technique. Analyse editing a short film."
+    },
+    "syllabusText": "Documentary history, interview technique and editing a short film. Learning outcomes: Explain documentary history. Apply interview technique. Analyse editing a short film.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CORE-UA 120",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  },
+  {
+    "courseId": "eval-new-core-ua-365",
+    "program": "Computer Science",
+    "sourceCourse": {
+      "institution": "New York University",
+      "code": "CORE-UA 365",
+      "title": "Marine Biology",
+      "credits": 4,
+      "creditSystem": "semester",
+      "grade": "B",
+      "term": "Fall 2025",
+      "description": "Ocean ecosystems, marine invertebrates and coral reefs.",
+      "learningOutcomes": "Explain ocean ecosystems. Apply marine invertebrates. Analyse coral reefs."
+    },
+    "syllabusText": "Ocean ecosystems, marine invertebrates and coral reefs. Learning outcomes: Explain ocean ecosystems. Apply marine invertebrates. Analyse coral reefs.",
+    "policyFlags": {
+      "convertedCredits": 4,
+      "quarterConversionApplied": false,
+      "gradeBelowMinimum": false,
+      "minimumGrade": "C",
+      "buOnlyCourses": [
+        "CAS CS 320",
+        "CAS CS 332",
+        "CAS CS 350"
+      ],
+      "rulesVersion": "r-001"
+    },
+    "promptVersion": "p-001",
+    "cacheKey": "eval:New York University:CORE-UA 365",
+    "expectedOutcome": "ElectiveCredit",
+    "expectedBuCourse": null
+  }
+]

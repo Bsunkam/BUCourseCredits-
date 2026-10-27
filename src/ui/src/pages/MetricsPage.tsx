@@ -4,6 +4,7 @@ import { formatDateTime } from "../labels";
 import type { AgentRun, Metrics, Paged } from "../types";
 
 const pct = (n: number, d: number) => (d === 0 ? "—" : `${Math.round((n / d) * 100)}%`);
+const duration = (h?: number | null) => (h == null ? "—" : h < 48 ? `${h} h` : `${Math.round(h / 24)} days`);
 
 export default function MetricsPage() {
   const [page, setPage] = useState(1);
@@ -24,6 +25,17 @@ export default function MetricsPage() {
       <ErrorAlert error={metrics.error ?? runs.error} />
       {!m ? <Loading /> : (
         <div className="stack">
+          <div className="card stack">
+            <h2>Primary outcome: time a course sits at zero units</h2>
+            <p className="muted small" style={{ margin: 0 }}>
+              From case opened to the course's final decision. The baseline today (discovery question 1) is not yet confirmed by the sponsor.
+            </p>
+            <div className="grid-3">
+              <Stat value={duration(m.medianHoursAtZeroUnits)} label="Median, all decided courses" />
+              <Stat value={duration(m.medianHoursAtZeroUnitsReviewed)} label="Median, courses an evaluator reviewed" />
+              <Stat value={m.coursesStillAtZeroUnits} label="Courses still at zero units" />
+            </div>
+          </div>
           <div className="grid-3">
             <Stat value={m.cases} label="Cases" />
             <Stat value={m.courses} label="Courses" />
@@ -32,7 +44,8 @@ export default function MetricsPage() {
             <Stat value={m.aiCalls} label="Agent calls" hint="Full agent runs (stub runs locally)" />
             <Stat value={m.approvedRuleHits} label="Approved-equivalency hits" />
             <Stat value={m.cacheHits} label="Cached-suggestion hits" />
-            <Stat value={pct(m.finalDecisionsWithReviewer, m.finalDecisions)} label={`Human-control compliance (${m.finalDecisions} final decisions)`} />
+            <Stat value={pct(m.finalDecisionsWithReviewer, m.finalDecisions)} label={`Human-control compliance (${m.finalDecisions} human decisions)`} />
+            <Stat value={m.appliedFromEquivalencyDb} label="Existing equivalencies applied (no new review)" />
             <Stat value={pct(m.agentRunsWithModelRecord, m.aiCalls)} label="Agent runs stored with model + prompt version" />
             <Stat value={m.failedAgentRuns} label="Failed agent runs (fell back to manual review)" />
           </div>

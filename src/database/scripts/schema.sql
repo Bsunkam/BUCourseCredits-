@@ -578,3 +578,65 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027100231_AddLearningOutcomesAndSourceCatalogue'
+)
+BEGIN
+    ALTER TABLE [SourceCourses] ADD [LearningOutcomes] nvarchar(max) NULL;
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027100231_AddLearningOutcomesAndSourceCatalogue'
+)
+BEGIN
+    ALTER TABLE [BUCourses] ADD [LearningOutcomes] nvarchar(max) NULL;
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027100231_AddLearningOutcomesAndSourceCatalogue'
+)
+BEGIN
+    CREATE TABLE [SourceCatalogueCourses] (
+        [Id] int NOT NULL IDENTITY,
+        [InstitutionId] int NOT NULL,
+        [Code] nvarchar(40) NOT NULL,
+        [Title] nvarchar(200) NOT NULL,
+        [Credits] decimal(9,2) NOT NULL,
+        [Description] nvarchar(max) NULL,
+        [LearningOutcomes] nvarchar(max) NULL,
+        CONSTRAINT [PK_SourceCatalogueCourses] PRIMARY KEY ([Id]),
+        CONSTRAINT [FK_SourceCatalogueCourses_Institutions_InstitutionId] FOREIGN KEY ([InstitutionId]) REFERENCES [Institutions] ([Id]) ON DELETE NO ACTION
+    );
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027100231_AddLearningOutcomesAndSourceCatalogue'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_SourceCatalogueCourses_InstitutionId_Code] ON [SourceCatalogueCourses] ([InstitutionId], [Code]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027100231_AddLearningOutcomesAndSourceCatalogue'
+)
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20261027100231_AddLearningOutcomesAndSourceCatalogue', N'8.0.11');
+END;
+GO
+
+COMMIT;
+GO
+

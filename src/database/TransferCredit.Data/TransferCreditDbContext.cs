@@ -10,6 +10,7 @@ public class TransferCreditDbContext(DbContextOptions<TransferCreditDbContext> o
     public DbSet<SourceInstitution> Institutions => Set<SourceInstitution>();
     public DbSet<SourceCourse> SourceCourses => Set<SourceCourse>();
     public DbSet<BUCourse> BUCourses => Set<BUCourse>();
+    public DbSet<SourceCatalogueCourse> SourceCatalogueCourses => Set<SourceCatalogueCourse>();
     public DbSet<ProgramRule> ProgramRules => Set<ProgramRule>();
     public DbSet<RuleSetting> RuleSettings => Set<RuleSetting>();
     public DbSet<EquivalencyRule> EquivalencyRules => Set<EquivalencyRule>();
@@ -80,6 +81,15 @@ public class TransferCreditDbContext(DbContextOptions<TransferCreditDbContext> o
             e.Property(x => x.RequirementType).HasMaxLength(100);
             e.Property(x => x.SourceUrl).HasMaxLength(500);
             e.HasIndex(x => new { x.Code, x.Program }).IsUnique();
+        });
+
+        b.Entity<SourceCatalogueCourse>(e =>
+        {
+            e.Property(x => x.Code).HasMaxLength(40);
+            e.Property(x => x.Title).HasMaxLength(200);
+            e.HasIndex(x => new { x.InstitutionId, x.Code }).IsUnique();
+            e.HasOne(x => x.Institution).WithMany().HasForeignKey(x => x.InstitutionId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         b.Entity<ProgramRule>(e =>

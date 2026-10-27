@@ -45,5 +45,7 @@ public static class AuditActions
     public const string EvaluationDrafted = "EvaluationDrafted";
     public const string EvaluationFinalised = "EvaluationFinalised";
     public const string EquivalencySaved = "EquivalencySaved";
+    public const string EquivalencyNotSaved = "EquivalencyNotSaved";
+    public const string EquivalencyApplied = "EquivalencyApplied";
     public const string CasePosted = "CasePostedSimulated";
 }

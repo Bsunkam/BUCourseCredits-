@@ -15,7 +15,13 @@ public static class Mapping
 
     public static BuCourseDto ToDto(this BUCourse c, string? buOnlyRule = null) => new(
         c.Id, c.Code, c.Title, c.Program, c.RequirementType, c.Credits, c.Description, c.VerifiedStatus,
-        c.SourceUrl, buOnlyRule);
+        c.SourceUrl, buOnlyRule, c.LearningOutcomes);
+
+    /// <summary>"T" once the case is posted and the course earned units; null otherwise (no credit is not posted).</summary>
+    public static string? PostedGrade(this SourceCourse c, bool casePosted) =>
+        casePosted && c.Evaluations.FirstOrDefault(e => e.Status == EvaluationStatus.Final) is { AwardedUnits: > 0 }
+            ? RulesEngine.TransferGrade
+            : null;
 
     public static CandidateDto ToDto(this MatchCandidate c, IReadOnlyDictionary<int, string> buOnlyRules) => new(
         c.Id, c.BUCourse!.ToDto(buOnlyRules.GetValueOrDefault(c.BUCourseId)), MatchLevelLabels.ToLabel(c.MatchLevel),
@@ -28,7 +34,7 @@ public static class Mapping
     public static AppliedRuleDto ToDto(this EquivalencyRule r) => new(
         r.Id, r.OutcomeType, r.BUCourse?.ToDto(), r.VerifiedStatus, r.DecisionSource, r.CreatedFromEvaluationId is not null);
 
-    public static CourseDto ToDto(this SourceCourse c, IReadOnlyDictionary<int, string> buOnlyRules)
+    public static CourseDto ToDto(this SourceCourse c, IReadOnlyDictionary<int, string> buOnlyRules, bool casePosted = false)
     {
         var top = c.Candidates.OrderByDescending(x => x.Source == CandidateSource.ApprovedRule)
             .ThenBy(x => x.Id).FirstOrDefault();
@@ -38,7 +44,8 @@ public static class Mapping
             c.Id, c.InstitutionId, c.Institution?.Name ?? "", c.Code, c.Title, c.Credits, c.CreditSystem,
             c.ConvertedCredits, c.Grade, c.Term, c.Description, !string.IsNullOrWhiteSpace(c.SyllabusText),
             c.Status, c.MatchLevel is { } l ? MatchLevelLabels.ToLabel(l) : null,
-            c.AppliedEquivalencyRule?.ToDto(), top?.ToDto(buOnlyRules), evaluation?.ToDto());
+            c.AppliedEquivalencyRule?.ToDto(), top?.ToDto(buOnlyRules), evaluation?.ToDto(), c.LearningOutcomes,
+            c.PostedGrade(casePosted), RulesEngine.HubUnits);
     }
 
     public static DocumentDto ToDto(this Document d) => new(

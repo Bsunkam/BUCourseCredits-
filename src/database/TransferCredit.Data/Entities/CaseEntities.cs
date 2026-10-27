@@ -56,6 +56,7 @@ public class SourceCourse
     public string? Grade { get; set; }
     public string? Term { get; set; }
     public string? Description { get; set; }
+    public string? LearningOutcomes { get; set; }
 
     /// <summary>Syllabus evidence: extracted from a document or entered by staff. Untrusted text.</summary>
     public string? SyllabusText { get; set; }

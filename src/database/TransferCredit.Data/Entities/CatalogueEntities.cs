@@ -9,9 +9,28 @@ public class BUCourse
     public string RequirementType { get; set; } = "";
     public decimal Credits { get; set; }
     public string? Description { get; set; }
+
+    /// <summary>Learning outcomes, compared with the source course by the evaluator and the agent.</summary>
+    public string? LearningOutcomes { get; set; }
     public VerifiedStatus VerifiedStatus { get; set; }
     public string? SourceUrl { get; set; }
     public DateOnly EffectiveDate { get; set; }
+}
+
+/// <summary>
+/// A course from another institution's public catalogue. Used to fill in the description and learning
+/// outcomes when a transcript only lists code and title, so evaluators have evidence before a syllabus arrives.
+/// </summary>
+public class SourceCatalogueCourse
+{
+    public int Id { get; set; }
+    public int InstitutionId { get; set; }
+    public SourceInstitution? Institution { get; set; }
+    public string Code { get; set; } = "";
+    public string Title { get; set; } = "";
+    public decimal Credits { get; set; }
+    public string? Description { get; set; }
+    public string? LearningOutcomes { get; set; }
 }
 
 /// <summary>Program-specific rules such as "must be taken at BU" (BR-10).</summary>

@@ -160,6 +160,9 @@ namespace TransferCredit.Data.Migrations
                     b.Property<DateOnly>("EffectiveDate")
                         .HasColumnType("date");
 
+                    b.Property<string>("LearningOutcomes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Program")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -633,6 +636,45 @@ namespace TransferCredit.Data.Migrations
                     b.ToTable("RuleSettings");
                 });
 
+            modelBuilder.Entity("TransferCredit.Data.Entities.SourceCatalogueCourse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<decimal>("Credits")
+                        .HasPrecision(9, 2)
+                        .HasColumnType("decimal(9,2)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InstitutionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LearningOutcomes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InstitutionId", "Code")
+                        .IsUnique();
+
+                    b.ToTable("SourceCatalogueCourses");
+                });
+
             modelBuilder.Entity("TransferCredit.Data.Entities.SourceCourse", b =>
                 {
                     b.Property<int>("Id")
@@ -674,6 +716,9 @@ namespace TransferCredit.Data.Migrations
 
                     b.Property<int>("InstitutionId")
                         .HasColumnType("int");
+
+                    b.Property<string>("LearningOutcomes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MatchLevel")
                         .HasMaxLength(40)
@@ -892,6 +937,17 @@ namespace TransferCredit.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("BUCourse");
+                });
+
+            modelBuilder.Entity("TransferCredit.Data.Entities.SourceCatalogueCourse", b =>
+                {
+                    b.HasOne("TransferCredit.Data.Entities.SourceInstitution", "Institution")
+                        .WithMany()
+                        .HasForeignKey("InstitutionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Institution");
                 });
 
             modelBuilder.Entity("TransferCredit.Data.Entities.SourceCourse", b =>

@@ -9,6 +9,8 @@ STOP_WORDS = {
     "the", "and", "for", "with", "into", "from", "this", "that", "are", "its", "including", "introduction",
     "intro", "course", "students", "student", "topics", "use", "using", "basic", "weekly", "two", "will",
     "fundamentals", "principles", "foundations", "class", "based", "outcomes", "write", "design", "how",
+    # Generic learning-outcome verbs: every course "explains" and "applies", so they say nothing about content.
+    "learning", "explain", "apply", "analyse", "analyze", "evaluate", "describe", "understand", "able",
 }
 
 
@@ -30,7 +32,7 @@ def rank(source_text: str, catalogue: list[CatalogueCourse], top: int = 5) -> li
     source = tokens(source_text)
     scored = []
     for course in catalogue:
-        target = tokens(f"{course.title} {course.description}")
+        target = tokens(f"{course.title} {course.description or ''} {course.learningOutcomes or ''}")
         if not source or not target:
             continue
         overlap = sorted(source & target)

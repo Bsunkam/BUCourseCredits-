@@ -26,7 +26,7 @@ public static class CourseEndpoints
             var key = await matching.CacheKeyForAsync(course, course.Case.Program, ct);
 
             return Results.Ok(new CourseDetailDto(
-                course.ToDto(buOnly), course.CaseId, course.Case.CaseRef, course.Case.Program, course.SyllabusText,
+                course.ToDto(buOnly, course.Case.Status == CaseStatus.Posted), course.CaseId, course.Case.CaseRef, course.Case.Program, course.SyllabusText,
                 Mapping.ParseJson(course.PolicyFlagsJson),
                 course.Candidates.OrderBy(c => c.Id).Select(c => c.ToDto(buOnly)).ToList(),
                 course.Evaluations.OrderByDescending(e => e.Id).Select(e => e.ToDto()).ToList(),

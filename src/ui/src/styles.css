@@ -169,6 +169,11 @@ tfoot td { font-weight: 700; border-top: 2px solid var(--border); border-bottom:
 .timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .timeline li { display: grid; grid-template-columns: 150px 1fr; gap: 12px; }
 .timeline time { color: var(--muted); font-size: 12px; }
+.progress-bar { display: flex; height: 12px; border-radius: 999px; overflow: hidden; background: var(--neutral-bg); }
+.progress-bar .seg { display: block; height: 100%; }
+.progress-bar .seg.tone-success { background: var(--success-fg); }
+.progress-bar .seg.tone-neutral { background: color-mix(in srgb, var(--neutral-fg) 35%, var(--neutral-bg)); }
+.progress-bar .seg.tone-warn { background: var(--warn-fg); }
 .dropzone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 16px; text-align: center; color: var(--muted); }
 .dropzone.over { border-color: var(--focus); background: var(--info-bg); }
 .evidence { border-left: 3px solid var(--accent-fg); padding: 6px 10px; background: var(--surface-2); border-radius: 0 6px 6px 0; }

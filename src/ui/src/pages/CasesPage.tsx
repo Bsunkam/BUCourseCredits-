@@ -21,9 +21,9 @@ export default function CasesPage() {
   if (q) params.set("q", q);
   const { data, error, loading, reload, setError } = useLoad<CaseSummary[]>(`/api/cases?${params}`);
 
-  async function createDemo(studentRef: string) {
+  async function createDemo(studentRef: string, template?: string) {
     try {
-      const r = await api.post<{ id: number }>("/api/demo/cases", { studentRef });
+      const r = await api.post<{ id: number }>("/api/demo/cases", { studentRef, template });
       navigate(`/cases/${r.id}`);
     } catch (e) {
       setError((e as Error).message);
@@ -36,13 +36,23 @@ export default function CasesPage() {
     <>
       <div className="page-head">
         <div>
-          <h1>Transfer credit cases</h1>
-          <p className="muted">Sorted by transfer deadline. Pending credit counts as zero units until a final decision.</p>
+          <h1>{user?.role === "Advisor" ? "Advisee cases" : "Transfer credit cases"}</h1>
+          <p className="muted">
+            Sorted by transfer deadline. Pending credit counts as zero units until a final decision.
+            {user?.role === "Advisor" && " Read-only: you see the same summary the student sees, without reviewer notes."}
+          </p>
         </div>
         {isStaff(user) && (
           <div className="row">
-            <button onClick={() => createDemo("DS-0001")}>New six-course demo case (Student A)</button>
+            <button onClick={() => createDemo("DS-0001")}
+              title="The brief's scenario: community college, 3 existing equivalencies, 2 maybe, 1 quarter-system course">
+              New six-course demo case (Student A)
+            </button>
             <button onClick={() => createDemo("DS-0002")}>Same courses for Student B</button>
+            <button onClick={() => createDemo("DS-0001", "northeastern")}
+              title="Northeastern transfer: BU-only course block, grade below minimum, mapping still marked Check">
+              Northeastern demo case
+            </button>
             <button className="primary" onClick={() => setShowCreate((s) => !s)}>New case</button>
           </div>
         )}

@@ -100,6 +100,39 @@ def test_invalid_request_is_rejected():
     assert client.post("/agent/evaluate", json=bad).status_code == 422
 
 
+def test_learning_outcomes_are_accepted_and_used_for_matching():
+    body = request("t-outcomes", "Weekly labs and two exams.", title="Programming II")
+    body["sourceCourse"]["learningOutcomes"] = ("Implement linked lists, stacks, queues, trees and hash tables "
+                                                "in an object-oriented language; analyse algorithms.")
+    body["candidates"] = [dict(c, learningOutcomes=None) for c in CATALOGUE]
+    r = client.post("/agent/evaluate", json=body)
+    assert r.status_code == 200
+    assert r.json()["suggestedBuCourse"] == "CAS CS 112"
+
+
+def test_eval_scoring_counts_no_equivalent_as_agreement_for_elective_and_no_credit():
+    from eval.run_eval import score
+
+    suggested = EvaluateResponse.model_validate(client.post("/agent/evaluate", json=request("t-score", DS_SYLLABUS)).json())
+    assert score("BuEquivalent", "CAS CS 112", suggested) == (True, True)
+    assert score("ElectiveCredit", None, suggested) == (False, False)
+    none_found = suggested.model_copy(update={"matchLevel": "No equivalent found"})
+    assert score("NoCredit", None, none_found) == (True, True)
+
+
+def test_labelled_cases_match_the_contract():
+    import json
+    from pathlib import Path
+
+    from app.models import EvaluateRequest
+
+    cases = json.loads((Path(__file__).parents[1] / "eval" / "labelled_cases.json").read_text(encoding="utf-8"))
+    assert len(cases) >= 90
+    for case in cases:
+        fields = {k: v for k, v in case.items() if k not in ("expectedOutcome", "expectedBuCourse")}
+        EvaluateRequest.model_validate({"threadId": "t", "candidates": [], **fields})
+
+
 def test_extract_requires_azure_mode():
     r = client.post("/agent/extract", json={"documentId": "1", "container": "documents",
                                             "blobPath": "1/1/x.pdf", "documentType": "Syllabus"})

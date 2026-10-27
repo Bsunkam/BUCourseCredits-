@@ -77,34 +77,131 @@ public sealed class WorkflowTests : IDisposable
         throw new TimeoutException("Matching did not finish.");
     }
 
-    private static async Task<int> CreateDemoCaseAsync(HttpClient staff, string studentRef)
+    internal const string Northeastern = "northeastern";
+
+    private static async Task<int> CreateDemoCaseAsync(HttpClient staff, string studentRef, string? template = null)
     {
-        var response = await staff.PostAsJsonAsync("/api/demo/cases", new { studentRef });
+        var response = await staff.PostAsJsonAsync("/api/demo/cases", new { studentRef, template });
         response.EnsureSuccessStatusCode();
         return (await response.Content.ReadFromJsonAsync<JsonElement>()).GetProperty("id").GetInt32();
     }
 
+    private static async Task<CaseDetailDto> MatchAsync(HttpClient staff, int caseId)
+    {
+        (await staff.PostAsync($"/api/cases/{caseId}/match", null)).EnsureSuccessStatusCode();
+        return await WaitForMatchingAsync(staff, caseId);
+    }
+
+    private static async Task<EvaluationDto> DecideAsync(
+        HttpClient client, int courseId, OutcomeType outcome, int? buCourseId, string rationale, decimal? units = null)
+    {
+        var draft = await client.PostAsJsonAsync("/api/evaluations",
+            new CreateEvaluationRequest(courseId, outcome, buCourseId, units, rationale), Json);
+        draft.EnsureSuccessStatusCode();
+        var id = (await draft.Content.ReadFromJsonAsync<EvaluationDto>(Json))!.Id;
+        var final = await client.PostAsync($"/api/evaluations/{id}/finalize", null);
+        final.EnsureSuccessStatusCode();
+        return (await final.Content.ReadFromJsonAsync<EvaluationDto>(Json))!;
+    }
+
     [Fact]
-    public async Task Six_course_demo_follows_the_rulebook()
+    public async Task Six_course_demo_follows_the_brief()
     {
         var staff = factory.As("staff-1");
         var caseId = await CreateDemoCaseAsync(staff, "DS-0001");
+        var byCode = (await MatchAsync(staff, caseId)).Courses.ToDictionary(c => c.Code);
 
-        (await staff.PostAsync($"/api/cases/{caseId}/match", null)).EnsureSuccessStatusCode();
-        var detail = await WaitForMatchingAsync(staff, caseId);
-        var byCode = detail.Courses.ToDictionary(c => c.Code);
+        // 3 existing equivalencies are applied straight away (step 4), with no AI call and no new review.
+        Assert.All(new[] { "CSC 110", "MAT 210", "PSY 101" }, code =>
+        {
+            Assert.Equal(CourseStatus.Decided, byCode[code].Status);
+            Assert.Equal("system:equivalency-db", byCode[code].Evaluation!.EvaluatorId);
+            Assert.Equal(byCode[code].ConvertedCredits, byCode[code].Evaluation!.AwardedUnits);
+        });
+        // Quarter-system course: 4 quarter credits become 2.66 BU credits (BR-03), applied from its equivalency.
+        Assert.Equal(2.66m, byCode["CS 140"].ConvertedCredits);
+        Assert.Equal(CourseStatus.Decided, byCode["CS 140"].Status);
+        Assert.Equal(2.66m, byCode["CS 140"].Evaluation!.AwardedUnits);
+        // 2 "maybe" courses: one has a syllabus and goes to review; the other needs one (BR-08).
+        Assert.Equal(CourseStatus.NeedsReview, byCode["CSC 215"].Status);
+        Assert.Equal("CAS CS 131", byCode["CSC 215"].TopCandidate!.BuCourse.Code);
+        Assert.Equal(CourseStatus.NeedsSyllabus, byCode["CSC 230"].Status);
+        // The public catalogue gives the evaluator a description and outcomes before the syllabus arrives.
+        Assert.False(string.IsNullOrWhiteSpace(byCode["CSC 230"].Description));
+        Assert.False(string.IsNullOrWhiteSpace(byCode["CSC 230"].LearningOutcomes));
 
-        // 3 known matches from approved equivalencies, with no agent call.
-        Assert.All(new[] { "CS 2500", "MATH 1341", "PSYC 1101" },
-            code => Assert.Equal(CourseStatus.ApprovedMatchFound, byCode[code].Status));
-        // 2 "maybe" courses with syllabi go to review; the BU-only candidate is blocked (BR-10).
+        // Applied equivalencies are reported apart from human decisions, and feed the primary outcome measure.
+        var metrics = (await staff.GetFromJsonAsync<MetricsDto>("/api/metrics", Json))!;
+        Assert.Equal(4, metrics.AppliedFromEquivalencyDb);
+        Assert.Equal(0, metrics.FinalDecisions);
+        Assert.NotNull(metrics.MedianHoursAtZeroUnits);
+        Assert.Null(metrics.MedianHoursAtZeroUnitsReviewed);
+        Assert.Equal(2 + 6, metrics.CoursesStillAtZeroUnits); // this case's 2 "maybe" + the start-up demo case's 6
+    }
+
+    [Fact]
+    public async Task Six_course_demo_runs_from_syllabus_to_posting_with_grade_T()
+    {
+        var staff = factory.As("staff-1");
+        var evaluator = factory.As("eval-cs");
+        var student = factory.As("student-a");
+        var caseId = await CreateDemoCaseAsync(staff, "DS-0001");
+        var byCode = (await MatchAsync(staff, caseId)).Courses.ToDictionary(c => c.Code);
+
+        var before = (await student.GetFromJsonAsync<StudentStatusDto>($"/api/cases/{caseId}/status", Json))!;
+        var waiting = before.Courses.Single(c => c.Code == "CSC 230");
+        Assert.Equal("At risk", waiting.Standing);
+        Assert.Contains("syllabus", waiting.SyllabusReason!);
+        Assert.Equal(0m, waiting.AwardedUnits); // BR-02
+        Assert.Equal(3m, waiting.PotentialUnits);
+        Assert.Equal(1, before.Progress.CoursesNeedingAction);
+        Assert.Equal(3m + 4m + 3m + 2.66m, before.Progress.SecuredUnits);
+
+        // The syllabus arrives; the course is matched again and the evaluator decides both "maybe" courses.
+        (await staff.PutAsJsonAsync($"/api/courses/{byCode["CSC 230"].Id}/syllabus",
+            new UpdateSyllabusRequest("Outcomes: write C programs using pointers and dynamic memory; explain binary data representation, " +
+                                      "memory and caches; read assembly language; describe how processes and linking work."))).EnsureSuccessStatusCode();
+        byCode = (await MatchAsync(staff, caseId)).Courses.ToDictionary(c => c.Code);
+        Assert.Equal(CourseStatus.NeedsReview, byCode["CSC 230"].Status);
+
+        await DecideAsync(evaluator, byCode["CSC 215"].Id, OutcomeType.BuEquivalent, byCode["CSC 215"].TopCandidate!.BuCourse.Id,
+            "Logic, proofs, counting and graphs match CS 131.");
+        await DecideAsync(evaluator, byCode["CSC 230"].Id, OutcomeType.ElectiveCredit, null,
+            "Covers part of CS 210; award elective units.");
+
+        (await staff.PostAsync($"/api/cases/{caseId}/post", null)).EnsureSuccessStatusCode();
+        var after = (await student.GetFromJsonAsync<StudentStatusDto>($"/api/cases/{caseId}/status", Json))!;
+
+        Assert.Equal(CaseStatus.Posted, after.Status);
+        Assert.All(after.Courses, c =>
+        {
+            Assert.Equal("T", c.PostedGrade);     // step 7: posted with a grade of T
+            Assert.Equal(0m, c.HubUnits);         // BR-05
+            Assert.Equal("Secured", c.Standing);
+        });
+        Assert.Equal(after.Courses.Sum(c => c.AwardedUnits), after.Progress.SecuredUnits);
+        Assert.Equal(0m, after.Progress.PendingUnits + after.Progress.AtRiskUnits);
+        Assert.Contains(after.Progress.SecuredByRequirement, r => r.Requirement == "General elective units");
+        Assert.Contains(after.PolicyNotes, n => n.Contains("BU GPA"));
+        Assert.Contains(after.PolicyNotes, n => n.Contains("Hub"));
+    }
+
+    [Fact]
+    public async Task Northeastern_demo_shows_bu_only_block_grade_gate_and_unverified_mapping()
+    {
+        var staff = factory.As("staff-1");
+        var caseId = await CreateDemoCaseAsync(staff, "DS-0001", Northeastern);
+        var byCode = (await MatchAsync(staff, caseId)).Courses.ToDictionary(c => c.Code);
+
+        Assert.Equal(CourseStatus.Decided, byCode["CS 2500"].Status);
+        // A mapping still marked Check is held for staff confirmation instead of being applied (BR-12).
+        Assert.Equal(CourseStatus.ApprovedMatchFound, byCode["PSYC 1101"].Status);
         Assert.Equal(CourseStatus.NeedsReview, byCode["CS 2510"].Status);
         Assert.Equal("CAS CS 112", byCode["CS 2510"].TopCandidate!.BuCourse.Code);
-        Assert.Equal(CourseStatus.Blocked, byCode["CS 3800"].Status);
+        Assert.Equal(CourseStatus.Blocked, byCode["CS 3800"].Status); // BR-10
         Assert.True(byCode["CS 3800"].TopCandidate!.IsBlocked);
-        // Quarter course: 4 -> 2.66 and no syllabus means "maybe" plus a syllabus request (BR-03, BR-08).
-        Assert.Equal(2.66m, byCode["CS 140"].ConvertedCredits);
-        Assert.Equal(CourseStatus.NeedsSyllabus, byCode["CS 140"].Status);
+        Assert.Equal(CourseStatus.NeedsReview, byCode["MATH 3A"].Status); // grade D: policy gate (BR-04)
+        Assert.Null(byCode["MATH 3A"].TopCandidate);
     }
 
     [Fact]
@@ -112,9 +209,8 @@ public sealed class WorkflowTests : IDisposable
     {
         var staff = factory.As("staff-1");
         var evaluator = factory.As("eval-cs");
-        var caseId = await CreateDemoCaseAsync(staff, "DS-0001");
-        await staff.PostAsync($"/api/cases/{caseId}/match", null);
-        var detail = await WaitForMatchingAsync(staff, caseId);
+        var caseId = await CreateDemoCaseAsync(staff, "DS-0001", Northeastern);
+        var detail = await MatchAsync(staff, caseId);
         var cs2510 = detail.Courses.Single(c => c.Code == "CS 2510");
         var cs3800 = detail.Courses.Single(c => c.Code == "CS 3800");
 
@@ -146,22 +242,66 @@ public sealed class WorkflowTests : IDisposable
         var evaluator = factory.As("eval-cs");
 
         var first = await CreateDemoCaseAsync(staff, "DS-0001");
-        await staff.PostAsync($"/api/cases/{first}/match", null);
-        var cs2510 = (await WaitForMatchingAsync(staff, first)).Courses.Single(c => c.Code == "CS 2510");
-        var draft = await evaluator.PostAsJsonAsync("/api/evaluations", new CreateEvaluationRequest(
-            cs2510.Id, OutcomeType.BuEquivalent, cs2510.TopCandidate!.BuCourse.Id, null, "Outcomes match CS 112"), Json);
-        var draftId = (await draft.Content.ReadFromJsonAsync<EvaluationDto>(Json))!.Id;
-        (await evaluator.PostAsync($"/api/evaluations/{draftId}/finalize", null)).EnsureSuccessStatusCode();
+        var csc215 = (await MatchAsync(staff, first)).Courses.Single(c => c.Code == "CSC 215");
+        await DecideAsync(evaluator, csc215.Id, OutcomeType.BuEquivalent, csc215.TopCandidate!.BuCourse.Id, "Outcomes match CS 131");
 
         var second = await CreateDemoCaseAsync(staff, "DS-0002");
-        await staff.PostAsync($"/api/cases/{second}/match", null);
-        var reused = (await WaitForMatchingAsync(staff, second)).Courses.Single(c => c.Code == "CS 2510");
+        var reused = (await MatchAsync(staff, second)).Courses.Single(c => c.Code == "CSC 215");
 
-        Assert.Equal(CourseStatus.ApprovedMatchFound, reused.Status);
+        // The saved decision is an approved equivalency now, so it is applied like any other (step 4).
+        Assert.Equal(CourseStatus.Decided, reused.Status);
         Assert.True(reused.AppliedRule!.FromEvaluation);
 
         var course = (await staff.GetFromJsonAsync<CourseDetailDto>($"/api/courses/{reused.Id}", Json))!;
         Assert.All(course.AgentRuns, r => Assert.NotEqual(AgentRunSource.NewRun, r.Source));
+    }
+
+    [Fact]
+    public async Task No_credit_given_for_a_low_grade_is_not_reused_for_a_student_with_a_good_grade()
+    {
+        var staff = factory.As("staff-1");
+        var evaluator = factory.As("eval-cs");
+
+        // Student A has a D in MATH 3A; the evaluator gives no credit because of the grade.
+        var first = await CreateDemoCaseAsync(staff, "DS-0001", Northeastern);
+        var low = (await MatchAsync(staff, first)).Courses.Single(c => c.Code == "MATH 3A");
+        await DecideAsync(evaluator, low.Id, OutcomeType.NoCredit, null, "Grade D is below the minimum C.");
+
+        // Student B took the same course and got an A.
+        var second = await CreateDemoCaseAsync(staff, "DS-0002");
+        var institutions = (await staff.GetFromJsonAsync<List<InstitutionDto>>("/api/institutions", Json))!;
+        var pcc = institutions.Single(i => i.Name == "Pacific Coast College (synthetic)");
+        (await staff.PostAsJsonAsync($"/api/cases/{second}/courses/import", new ImportCoursesRequest(
+            [new ImportCourse(pcc.Id, "MATH 3A", "Calculus I", 4, "A", "Winter 2024", null, null)]), Json)).EnsureSuccessStatusCode();
+        var good = (await MatchAsync(staff, second)).Courses.Single(c => c.Code == "MATH 3A");
+
+        Assert.NotEqual(CourseStatus.Decided, good.Status);
+        Assert.Null(good.AppliedRule);
+    }
+
+    [Fact]
+    public async Task Elective_credit_must_award_units_and_staff_cannot_change_units_when_confirming()
+    {
+        var staff = factory.As("staff-1");
+        var evaluator = factory.As("eval-cs");
+        var caseId = await CreateDemoCaseAsync(staff, "DS-0001", Northeastern);
+        var byCode = (await MatchAsync(staff, caseId)).Courses.ToDictionary(c => c.Code);
+
+        var zeroElective = await evaluator.PostAsJsonAsync("/api/evaluations", new CreateEvaluationRequest(
+            byCode["CS 2510"].Id, OutcomeType.ElectiveCredit, null, 0m, "Elective"), Json);
+        Assert.Equal(HttpStatusCode.BadRequest, zeroElective.StatusCode); // BR-09: elective credit counts as units
+
+        // PSYC 1101 is held for confirmation (mapping marked Check). Staff may confirm it only as it stands.
+        var psyc = byCode["PSYC 1101"];
+        Assert.Equal(CourseStatus.ApprovedMatchFound, psyc.Status);
+        var buId = psyc.AppliedRule!.BuCourse!.Id;
+        var changed = await staff.PostAsJsonAsync("/api/evaluations",
+            new CreateEvaluationRequest(psyc.Id, OutcomeType.BuEquivalent, buId, 2m, "Confirm with fewer units"), Json);
+        var changedId = (await changed.Content.ReadFromJsonAsync<EvaluationDto>(Json))!.Id;
+        Assert.Equal(HttpStatusCode.Forbidden, (await staff.PostAsync($"/api/evaluations/{changedId}/finalize", null)).StatusCode);
+
+        var confirmed = await DecideAsync(staff, psyc.Id, OutcomeType.BuEquivalent, buId, "Confirmed existing mapping");
+        Assert.Equal(psyc.ConvertedCredits, confirmed.AwardedUnits);
     }
 
     [Fact]

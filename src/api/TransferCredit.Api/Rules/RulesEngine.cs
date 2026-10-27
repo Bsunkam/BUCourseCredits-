@@ -9,6 +9,15 @@ public enum CreditRounding { Truncate, Round }
 /// </summary>
 public static class RulesEngine
 {
+    /// <summary>Step 7 of the brief: transfer credit is posted to MyBU Student with a grade of "T".</summary>
+    public const string TransferGrade = "T";
+
+    /// <summary>BR-05: transfer courses never earn BU Hub general education units.</summary>
+    public const decimal HubUnits = 0m;
+
+    /// <summary>Actor recorded when an existing approved equivalency is applied without a new human decision.</summary>
+    public const string EquivalencyDatabaseActor = "system:equivalency-db";
+
     // Highest first. Anything not in this list (P, CR, W, IP...) cannot be compared and needs review.
     private static readonly string[] GradeScale =
         ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F"];

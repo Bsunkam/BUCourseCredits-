@@ -149,10 +149,54 @@ public class MatchingService(
             _ => MatchLevel.NoEquivalentFound
         };
         AddSkippedRun(course, key, AgentRunSource.ApprovedRule, $"Approved equivalency #{rule.Id} applied.");
+
+        // Step 4 of the brief: a course evaluated before gets the existing equivalency applied. That decision was
+        // already made by a department, so it is recorded without a new review. It is held for staff confirmation
+        // when this student's grade could not be checked (BR-04) or the mapping is still marked Check (BR-12).
+        var holdReason = blockedBy is not null ? null
+            : flags.GradeBelowMinimum is null ? $"grade {course.Grade ?? "missing"} could not be checked against {flags.MinimumGrade}"
+            : rule.VerifiedStatus != VerifiedStatus.Yes ? "the mapping's catalogue details still need checking"
+            : null;
+        if (blockedBy is null && holdReason is null)
+        {
+            ApplyEquivalency(course, rule);
+            return new(course.Status, "ApprovedRuleApplied", false);
+        }
+
         audit.Record(actorId, course.CaseId, AuditActions.MatchCompleted,
-            $"{course.Code}: approved equivalency #{rule.Id} found (no AI call).",
+            $"{course.Code}: approved equivalency #{rule.Id} found (no AI call)" +
+            (holdReason is null ? "." : $"; held for staff confirmation because {holdReason}."),
             studentMessage: $"{course.Code}: an existing equivalency was found and is awaiting confirmation.");
         return new(course.Status, "ApprovedRule", false);
+    }
+
+    private void ApplyEquivalency(SourceCourse course, EquivalencyRule rule)
+    {
+        var now = clock.GetUtcNow();
+        var units = EvaluationService.UnitsFor(rule.OutcomeType, course);
+        course.Evaluations.Add(new Evaluation
+        {
+            EvaluatorId = RulesEngine.EquivalencyDatabaseActor,
+            OutcomeType = rule.OutcomeType,
+            BUCourseId = rule.BUCourseId,
+            AwardedUnits = units,
+            Rationale = $"Existing approved equivalency #{rule.Id} applied ({rule.DecisionSource}).",
+            Status = EvaluationStatus.Final,
+            CreatedAt = now,
+            DecisionAt = now
+        });
+        course.Status = CourseStatus.Decided;
+
+        var outcome = rule.OutcomeType switch
+        {
+            OutcomeType.BuEquivalent => $"BU equivalent {rule.BUCourse?.Code}",
+            OutcomeType.ElectiveCredit => "elective credit",
+            _ => "no credit"
+        };
+        audit.Record(RulesEngine.EquivalencyDatabaseActor, course.CaseId, AuditActions.EquivalencyApplied,
+            $"{course.Code}: existing approved equivalency #{rule.Id} applied: {outcome}, {units} units (no AI call, no new review).",
+            newValue: rule.OutcomeType.ToString(),
+            studentMessage: $"{course.Code}: existing BU equivalency applied: {outcome}, {units} units.");
     }
 
     private Task<AgentRun?> FindCachedRunAsync(string key, CancellationToken ct)
@@ -179,11 +223,12 @@ public class MatchingService(
             ThreadId: $"course-{course.Id}-{Guid.NewGuid():N}",
             Program: program,
             SourceCourse: new AgentSourceCourse(course.Institution!.Name, course.Code, course.Title, course.Credits,
-                course.CreditSystem.ToString().ToLowerInvariant(), course.Grade, course.Term, course.Description),
+                course.CreditSystem.ToString().ToLowerInvariant(), course.Grade, course.Term, course.Description,
+                course.LearningOutcomes),
             SyllabusText: course.SyllabusText,
             PolicyFlags: flags,
             Candidates: catalogue.Select(c => new AgentCatalogueCourse(c.Code, c.Title, c.Credits, c.Description,
-                c.VerifiedStatus.ToString())).ToList(),
+                c.VerifiedStatus.ToString(), c.LearningOutcomes)).ToList(),
             PromptVersion: options.Value.PromptVersion,
             CacheKey: key);
 

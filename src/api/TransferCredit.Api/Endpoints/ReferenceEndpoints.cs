@@ -4,6 +4,7 @@ using TransferCredit.Api.Agent;
 using TransferCredit.Api.Auth;
 using TransferCredit.Api.Contracts;
 using TransferCredit.Api.Documents;
+using TransferCredit.Api.Rules;
 using TransferCredit.Api.Services;
 using TransferCredit.Data;
 using TransferCredit.Data.Entities;
@@ -86,13 +87,27 @@ public static class ReferenceEndpoints
             var byStatus = await db.Cases.GroupBy(c => c.Status).Select(g => new { g.Key, Count = g.Count() }).ToListAsync(ct);
             var coursesByStatus = await db.SourceCourses.GroupBy(c => c.Status).Select(g => new { g.Key, Count = g.Count() }).ToListAsync(ct);
             var runs = await db.AgentRuns.AsNoTracking().Select(r => new { r.Source, r.Status, r.Model }).ToListAsync(ct);
-            var finals = await db.Evaluations.Where(e => e.Status == EvaluationStatus.Final)
-                .Select(e => e.EvaluatorId).ToListAsync(ct);
+            var decisions = await db.Evaluations.AsNoTracking().Where(e => e.Status == EvaluationStatus.Final)
+                .Select(e => new { e.EvaluatorId, e.DecisionAt, OpenedAt = e.SourceCourse!.Case!.CreatedAt }).ToListAsync(ct);
+            var finals = decisions.Where(d => d.EvaluatorId != RulesEngine.EquivalencyDatabaseActor).Select(d => d.EvaluatorId).ToList();
 
             var aiCalls = runs.Count(r => r.Source == AgentRunSource.NewRun && r.Status != AgentRunStatus.Skipped);
             var approved = runs.Count(r => r.Source == AgentRunSource.ApprovedRule);
             var cache = runs.Count(r => r.Source == AgentRunSource.Cache);
             var resolvable = aiCalls + approved + cache;
+
+            // Primary outcome: time each course spends at zero units, from case opened to final decision.
+            static double? Median(IEnumerable<double> values)
+            {
+                var sorted = values.Order().ToList();
+                if (sorted.Count == 0) return null;
+                var mid = sorted.Count / 2;
+                return Math.Round(sorted.Count % 2 == 1 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2, 1);
+            }
+            var hours = decisions.Where(d => d.DecisionAt is not null)
+                .Select(d => (Reviewed: d.EvaluatorId != RulesEngine.EquivalencyDatabaseActor,
+                              Hours: Math.Max(0, (d.DecisionAt!.Value - d.OpenedAt).TotalHours)))
+                .ToList();
 
             return new MetricsDto(
                 byStatus.Sum(x => x.Count),
@@ -108,7 +123,11 @@ public static class ReferenceEndpoints
                 runs.Count(r => r.Source == AgentRunSource.NewRun && r.Status != AgentRunStatus.Skipped && r.Model != null),
                 runs.Count(r => r.Status == AgentRunStatus.Failed),
                 await db.Cases.CountAsync(ct),
-                coursesByStatus.ToDictionary(x => x.Key.ToString(), x => x.Count));
+                coursesByStatus.ToDictionary(x => x.Key.ToString(), x => x.Count),
+                decisions.Count - finals.Count,
+                Median(hours.Select(h => h.Hours)),
+                Median(hours.Where(h => h.Reviewed).Select(h => h.Hours)),
+                coursesByStatus.Where(x => x.Key != CourseStatus.Decided).Sum(x => x.Count));
         }).RequireAuthorization(Policies.Internal).WithTags("Reporting");
 
         // Newest first, one page at a time.
@@ -270,7 +289,7 @@ public static class ReferenceEndpoints
 
         demo.MapPost("/cases", async (CreateDemoCaseRequest request, CaseService cases, ClaimsPrincipal user, CancellationToken ct) =>
         {
-            var c = await cases.CreateDemoCaseAsync(request.StudentRef, user.Id(), ct);
+            var c = await cases.CreateDemoCaseAsync(request.StudentRef, user.Id(), ct, request.Template);
             return Results.Ok(new { c.Id, c.CaseRef });
         }).RequireAuthorization(Policies.Staff);
 

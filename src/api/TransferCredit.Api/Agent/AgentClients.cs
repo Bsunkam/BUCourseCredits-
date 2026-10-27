@@ -74,7 +74,9 @@ public partial class StubAgentClient : IAgentClient
     [
         "the", "and", "for", "with", "into", "from", "this", "that", "are", "its", "including", "introduction",
         "intro", "course", "students", "student", "topics", "use", "using", "basic", "weekly", "two", "will",
-        "fundamentals", "principles", "foundations", "class", "based", "outcomes", "write", "design", "how"
+        "fundamentals", "principles", "foundations", "class", "based", "outcomes", "write", "design", "how",
+        // Generic learning-outcome verbs: every course "explains" and "applies", so they say nothing about content.
+        "learning", "explain", "apply", "analyse", "analyze", "evaluate", "describe", "understand", "able"
     ];
 
     public string Mode => "stub";
@@ -82,14 +84,14 @@ public partial class StubAgentClient : IAgentClient
     public Task<AgentEvaluateResponse> EvaluateAsync(AgentEvaluateRequest request, CancellationToken ct)
     {
         var source = request.SourceCourse;
-        var sourceText = $"{source.Title} {source.Description} {request.SyllabusText}";
+        var sourceText = $"{source.Title} {source.Description} {source.LearningOutcomes} {request.SyllabusText}";
         var sourceTokens = Tokens(sourceText);
         var buOnly = request.PolicyFlags.BuOnlyCourses.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         var ranked = request.Candidates
             .Select(c =>
             {
-                var buTokens = Tokens($"{c.Title} {c.Description}");
+                var buTokens = Tokens($"{c.Title} {c.Description} {c.LearningOutcomes}");
                 var overlap = sourceTokens.Intersect(buTokens).ToList();
                 var score = buTokens.Count == 0 || sourceTokens.Count == 0
                     ? 0m

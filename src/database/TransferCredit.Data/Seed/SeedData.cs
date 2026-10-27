@@ -9,13 +9,17 @@ public record CatalogueSeed(
     List<InstitutionSeed> Institutions,
     List<BUCourseSeed> BuCourses,
     List<ProgramRuleSeed> ProgramRules,
+    List<SourceCatalogueSeed> SourceCatalogue,
     List<EquivalencySeed> Equivalencies);
 
 public record InstitutionSeed(string Name, CreditSystem CreditSystem, string? CatalogueSource);
 
 public record BUCourseSeed(
     string Code, string Title, string Program, string RequirementType, decimal Credits,
-    VerifiedStatus Verified, string? SourceUrl, string? Description);
+    VerifiedStatus Verified, string? SourceUrl, string? Description, string? LearningOutcomes);
+
+public record SourceCatalogueSeed(
+    string Institution, string Code, string Title, decimal Credits, string? Description, string? LearningOutcomes);
 
 public record ProgramRuleSeed(string Program, string BuCourseCode, ProgramRuleType RuleType, string Source);
 
@@ -28,7 +32,7 @@ public record DemoSeed(List<DemoUserSeed> Users, List<DemoCaseSeed> Cases);
 public record DemoUserSeed(string Id, string DisplayName, UserRole Role, string? Email, string? StudentRef);
 
 public record DemoCaseSeed(
-    string CaseRef, string StudentRef, string StudentName, string? StudentEmail,
+    string CaseRef, string Template, string StudentRef, string StudentName, string? StudentEmail,
     string Program, DateOnly StartDate, List<DemoCourseSeed> Courses);
 
 public record DemoCourseSeed(
@@ -83,51 +87,79 @@ public static class SeedData
             }));
         }
 
-        if (await db.BUCourses.AnyAsync(ct))
-        {
-            await db.SaveChangesAsync(ct);
-            return;
-        }
+        await TopUpCatalogueAsync(db, LoadCatalogue(), ct);
+        await db.SaveChangesAsync(ct);
+    }
 
-        var catalogue = LoadCatalogue();
+    /// <summary>
+    /// Adds catalogue rows that are missing, so a database seeded from an older catalogue.json picks up new courses
+    /// and past decisions on the next start. Existing rows are never changed, except that missing learning outcomes
+    /// are filled in. Evaluator-created equivalencies are left alone.
+    /// </summary>
+    private static async Task TopUpCatalogueAsync(TransferCreditDbContext db, CatalogueSeed catalogue, CancellationToken ct)
+    {
         var now = DateTimeOffset.UtcNow;
         var effective = new DateOnly(2025, 9, 1);
 
-        var institutions = catalogue.Institutions.ToDictionary(
-            i => i.Name,
-            i => new SourceInstitution { Name = i.Name, CreditSystem = i.CreditSystem, CatalogueSource = i.CatalogueSource });
-        db.Institutions.AddRange(institutions.Values);
-
-        var buCourses = catalogue.BuCourses.Select(c => new BUCourse
+        var institutions = await db.Institutions.ToDictionaryAsync(i => i.Name, ct);
+        foreach (var i in catalogue.Institutions.Where(i => !institutions.ContainsKey(i.Name)))
         {
-            Code = c.Code, Title = c.Title, Program = c.Program, RequirementType = c.RequirementType,
-            Credits = c.Credits, Description = c.Description, VerifiedStatus = c.Verified,
-            SourceUrl = c.SourceUrl, EffectiveDate = effective
-        }).ToList();
-        db.BUCourses.AddRange(buCourses);
+            var added = new SourceInstitution { Name = i.Name, CreditSystem = i.CreditSystem, CatalogueSource = i.CatalogueSource };
+            db.Institutions.Add(added);
+            institutions[i.Name] = added;
+        }
+
+        var buCourses = await db.BUCourses.ToListAsync(ct);
+        foreach (var c in catalogue.BuCourses)
+        {
+            var existing = buCourses.FirstOrDefault(x => x.Code == c.Code && x.Program == c.Program);
+            if (existing is not null)
+            {
+                existing.LearningOutcomes ??= c.LearningOutcomes;
+                continue;
+            }
+            var added = new BUCourse
+            {
+                Code = c.Code, Title = c.Title, Program = c.Program, RequirementType = c.RequirementType,
+                Credits = c.Credits, Description = c.Description, LearningOutcomes = c.LearningOutcomes,
+                VerifiedStatus = c.Verified, SourceUrl = c.SourceUrl, EffectiveDate = effective
+            };
+            db.BUCourses.Add(added);
+            buCourses.Add(added);
+        }
 
         BUCourse Find(string code) => buCourses.First(c => c.Code == code);
 
-        db.ProgramRules.AddRange(catalogue.ProgramRules.Select(r => new ProgramRule
-        {
-            Program = r.Program, BUCourse = Find(r.BuCourseCode), RuleType = r.RuleType, Source = r.Source
-        }));
+        var programRules = await db.ProgramRules.Include(r => r.BUCourse).ToListAsync(ct);
+        db.ProgramRules.AddRange(catalogue.ProgramRules
+            .Where(r => !programRules.Any(x => x.Program == r.Program && x.BUCourse!.Code == r.BuCourseCode && x.RuleType == r.RuleType))
+            .Select(r => new ProgramRule { Program = r.Program, BUCourse = Find(r.BuCourseCode), RuleType = r.RuleType, Source = r.Source }));
 
-        db.EquivalencyRules.AddRange(catalogue.Equivalencies.Select(e => new EquivalencyRule
-        {
-            Institution = institutions[e.Institution],
-            SourceCode = e.SourceCode,
-            SourceTitle = e.SourceTitle,
-            Program = e.Program,
-            OutcomeType = e.Outcome,
-            BUCourse = e.BuCourseCode is null ? null : Find(e.BuCourseCode),
-            ApprovalStatus = ApprovalStatus.Approved,
-            VerifiedStatus = e.Verified,
-            EffectiveFrom = effective,
-            DecisionSource = "Seed: course-match workbook (synthetic placeholder)",
-            CreatedAt = now
-        }));
+        var sourceCatalogue = await db.SourceCatalogueCourses.Include(c => c.Institution).ToListAsync(ct);
+        db.SourceCatalogueCourses.AddRange(catalogue.SourceCatalogue
+            .Where(c => !sourceCatalogue.Any(x => x.Institution!.Name == c.Institution && x.Code == c.Code))
+            .Select(c => new SourceCatalogueCourse
+            {
+                Institution = institutions[c.Institution], Code = c.Code, Title = c.Title, Credits = c.Credits,
+                Description = c.Description, LearningOutcomes = c.LearningOutcomes
+            }));
 
-        await db.SaveChangesAsync(ct);
+        var equivalencies = await db.EquivalencyRules.Include(r => r.Institution).ToListAsync(ct);
+        db.EquivalencyRules.AddRange(catalogue.Equivalencies
+            .Where(e => !equivalencies.Any(x => x.Institution!.Name == e.Institution && x.SourceCode == e.SourceCode && x.Program == e.Program))
+            .Select(e => new EquivalencyRule
+            {
+                Institution = institutions[e.Institution],
+                SourceCode = e.SourceCode,
+                SourceTitle = e.SourceTitle,
+                Program = e.Program,
+                OutcomeType = e.Outcome,
+                BUCourse = e.BuCourseCode is null ? null : Find(e.BuCourseCode),
+                ApprovalStatus = ApprovalStatus.Approved,
+                VerifiedStatus = e.Verified,
+                EffectiveFrom = effective,
+                DecisionSource = "Seed: synthetic past decision",
+                CreatedAt = now
+            }));
     }
 }

@@ -26,6 +26,7 @@ class SourceCourse(Contract):
     grade: Optional[str] = None
     term: Optional[str] = None
     description: Optional[str] = None
+    learningOutcomes: Optional[str] = None
 
 
 class PolicyFlags(Contract):
@@ -45,6 +46,7 @@ class CatalogueCourse(Contract):
     credits: float
     description: Optional[str] = None
     verified: str
+    learningOutcomes: Optional[str] = None
 
 
 class EvaluateRequest(Contract):

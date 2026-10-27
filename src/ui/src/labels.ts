@@ -1,4 +1,4 @@
-import type { CaseStatus, CourseStatus, OutcomeType, ScanStatus } from "./types";
+import type { CaseStatus, CourseStatus, OutcomeType, ScanStatus, Standing } from "./types";
 
 export type Tone = "neutral" | "info" | "warn" | "danger" | "success" | "accent";
 
@@ -26,6 +26,20 @@ export const scanStatus: Record<ScanStatus, { label: string; tone: Tone }> = {
   Clean: { label: "Clean", tone: "success" },
   Quarantined: { label: "Quarantined", tone: "danger" },
 };
+
+/** Student view: how secure each course's credit is. */
+export const standingTone: Record<Standing, Tone> = {
+  Secured: "success",
+  "Pending review": "neutral",
+  "At risk": "warn",
+  "No credit": "danger",
+};
+
+/** Evaluator id the API records when an existing approved equivalency is applied (step 4 of the brief). */
+export const EQUIVALENCY_DB = "system:equivalency-db";
+
+/** Credit values to two decimals at most (4 quarter credits show as 2.66, not 2.6600). */
+export const units = (n: number) => String(Math.round(n * 100) / 100);
 
 export const outcomeLabel: Record<OutcomeType, string> = {
   BuEquivalent: "BU equivalent",

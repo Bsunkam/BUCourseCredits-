@@ -133,13 +133,14 @@ export function DocumentList({ documents, onError }: { documents: DocumentInfo[]
 }
 
 export function UploadPanel({
-  caseId, courses, onUploaded,
+  caseId, courses, onUploaded, defaultType = "Transcript",
 }: {
   caseId: number;
   courses?: { id: number; code: string }[];
   onUploaded: () => void;
+  defaultType?: DocumentType;
 }) {
-  const [type, setType] = useState<DocumentType>("Transcript");
+  const [type, setType] = useState<DocumentType>(defaultType);
   const [courseId, setCourseId] = useState("");
   const [over, setOver] = useState(false);
   const [busy, setBusy] = useState(false);

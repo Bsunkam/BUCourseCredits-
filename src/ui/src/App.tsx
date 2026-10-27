@@ -14,6 +14,8 @@ import MetricsPage from "./pages/MetricsPage";
 import DashboardPage from "./pages/DashboardPage";
 import OverviewPage from "./pages/OverviewPage";
 
+const home = (user: DemoUser) => user.role === "Student" ? "/my" : user.role === "Advisor" ? "/cases" : "/dashboard";
+
 export default function App() {
   const [users, setUsers] = useState<DemoUser[] | null>(null);
   const [userId, setUserId] = useState<string | null>(getDemoUser());
@@ -45,6 +47,9 @@ export default function App() {
           {user && (
             user.role === "Student" ? (
               <NavLink to="/my">My transfer credit</NavLink>
+            ) : user.role === "Advisor" ? (
+              // Advisors follow progress but never decide equivalency: read-only, student-safe summaries only.
+              <NavLink to="/cases">Advisee cases (read-only)</NavLink>
             ) : (
               <>
                 <NavLink to="/dashboard">Dashboard</NavLink>
@@ -75,17 +80,17 @@ export default function App() {
           <OverviewPage />
         ) : (
           <Routes>
-            <Route path="/" element={<Navigate to={user.role === "Student" ? "/my" : "/dashboard"} replace />} />
+            <Route path="/" element={<Navigate to={home(user)} replace />} />
             <Route path="/my" element={<StudentPage />} />
             <Route path="/overview" element={<OverviewPage signedIn />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/dashboard" element={isReviewer(user) ? <DashboardPage /> : <Navigate to="/" replace />} />
             <Route path="/cases" element={<CasesPage />} />
             <Route path="/cases/:id" element={isReviewer(user) ? <CaseDetailPage /> : <Navigate to="status" replace />} />
             <Route path="/cases/:id/status" element={<StatusPage />} />
             <Route path="/courses/:id" element={<WorkbenchPage />} />
             <Route path="/intake" element={<IntakePage />} />
-            <Route path="/catalogue" element={<CataloguePage />} />
-            <Route path="/metrics" element={<MetricsPage />} />
+            <Route path="/catalogue" element={isReviewer(user) ? <CataloguePage /> : <Navigate to="/" replace />} />
+            <Route path="/metrics" element={isReviewer(user) ? <MetricsPage /> : <Navigate to="/" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         )}

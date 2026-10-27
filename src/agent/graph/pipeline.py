@@ -63,7 +63,8 @@ def build_graph(settings: Settings, checkpointer=None):
 
     def matching(state: State) -> State:
         r = req(state)
-        source_text = f"{r.sourceCourse.title} {r.sourceCourse.description or ''} {state['syllabus']}"
+        source_text = (f"{r.sourceCourse.title} {r.sourceCourse.description or ''} "
+                       f"{r.sourceCourse.learningOutcomes or ''} {state['syllabus']}")
         pool = search_candidates(settings, source_text[:2000], r.candidates) if settings.use_azure else r.candidates
         # Pre-filter to keep the prompt small; the model then ranks the shortlist.
         shortlist = [c for c, _, _ in ranking.rank(source_text, pool, top=8)] or pool[:8]

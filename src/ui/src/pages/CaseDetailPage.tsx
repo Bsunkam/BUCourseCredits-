@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import { Badge, DocumentList, ErrorAlert, isStaff, Loading, UploadPanel, useLoad, useUser } from "../components";
-import { candidateSource, caseStatus, courseStatus, deadlineText, formatDate, formatDateTime, outcomeLabel } from "../labels";
+import {
+  candidateSource, caseStatus, courseStatus, deadlineText, EQUIVALENCY_DB, formatDate, formatDateTime, outcomeLabel, units,
+} from "../labels";
 import type { CaseDetail, Course, Institution } from "../types";
 
 export default function CaseDetailPage() {
@@ -105,13 +107,14 @@ function CourseTable({ courses, onOpen }: { courses: Course[]; onOpen: (c: Cours
         <thead>
           <tr>
             <th>Source course</th><th>Grade</th><th className="num">Credits</th><th>Match level</th>
-            <th>Suggestion / outcome</th><th>Status</th><th />
+            <th>Suggestion / outcome</th><th>Status</th><th>Posted</th><th />
           </tr>
         </thead>
         <tbody>
           {courses.map((c) => {
             const s = courseStatus[c.status];
             const final = c.evaluation?.status === "Final" ? c.evaluation : null;
+            const applied = final?.evaluatorId === EQUIVALENCY_DB;
             return (
               <tr key={c.id} className="clickable" onClick={() => onOpen(c)}>
                 <td>
@@ -120,13 +123,16 @@ function CourseTable({ courses, onOpen }: { courses: Course[]; onOpen: (c: Cours
                 </td>
                 <td>{c.grade ?? "—"}</td>
                 <td className="num">
-                  {c.convertedCredits}
+                  {units(c.convertedCredits)}
                   {c.creditSystem === "Quarter" && <div className="muted small">{c.credits} quarter</div>}
                 </td>
                 <td>{c.matchLevel ?? <span className="muted">—</span>}</td>
                 <td>
                   {final ? (
-                    <span>{outcomeLabel[final.outcomeType]} {final.buCourse?.code} · {final.awardedUnits} units</span>
+                    <span>
+                      {outcomeLabel[final.outcomeType]} {final.buCourse?.code} · {units(final.awardedUnits)} units
+                      <div className="muted small">{applied ? "Applied from equivalency database · no new review" : `Decided by ${final.evaluatorId}`}</div>
+                    </span>
                   ) : c.topCandidate ? (
                     <span>
                       {c.topCandidate.buCourse.code}
@@ -135,6 +141,9 @@ function CourseTable({ courses, onOpen }: { courses: Course[]; onOpen: (c: Cours
                   ) : <span className="muted">—</span>}
                 </td>
                 <td><Badge tone={s.tone}>{s.label}</Badge></td>
+                <td title="Transfer credit is posted with grade T, 0 Hub units, not counted in BU GPA">
+                  {c.postedGrade ? <strong>Grade {c.postedGrade}</strong> : <span className="muted">—</span>}
+                </td>
                 <td><button onClick={(e) => { e.stopPropagation(); onOpen(c); }}>Review</button></td>
               </tr>
             );
@@ -148,7 +157,9 @@ function CourseTable({ courses, onOpen }: { courses: Course[]; onOpen: (c: Cours
 function ImportCourse({ caseId, onDone }: { caseId: number; onDone: () => void }) {
   const institutions = useLoad<Institution[]>("/api/institutions");
   const [error, setError] = useState<string | null>(null);
-  const [f, setF] = useState({ institutionId: "", code: "", title: "", credits: "4", grade: "", term: "", description: "", syllabusText: "" });
+  const [f, setF] = useState({
+    institutionId: "", code: "", title: "", credits: "4", grade: "", term: "", description: "", learningOutcomes: "", syllabusText: "",
+  });
   const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
 
   async function submit(e: React.FormEvent) {
@@ -158,7 +169,7 @@ function ImportCourse({ caseId, onDone }: { caseId: number; onDone: () => void }
         courses: [{
           institutionId: Number(f.institutionId), code: f.code, title: f.title, credits: Number(f.credits),
           grade: f.grade || null, term: f.term || null, description: f.description || null,
-          syllabusText: f.syllabusText || null,
+          learningOutcomes: f.learningOutcomes || null, syllabusText: f.syllabusText || null,
         }],
       });
       onDone();
@@ -185,7 +196,9 @@ function ImportCourse({ caseId, onDone }: { caseId: number; onDone: () => void }
         <label className="field">Grade<input value={f.grade} onChange={set("grade")} placeholder="B+" /></label>
         <label className="field">Term<input value={f.term} onChange={set("term")} placeholder="Fall 2025" /></label>
       </div>
+      <p className="muted small">Leave description and outcomes blank to fill them from the institution's public catalogue, when it lists the course.</p>
       <label className="field">Catalogue description<textarea rows={2} value={f.description} onChange={set("description")} /></label>
+      <label className="field">Learning outcomes<textarea rows={2} value={f.learningOutcomes} onChange={set("learningOutcomes")} /></label>
       <label className="field">Syllabus text (optional; treated as untrusted evidence)
         <textarea rows={3} value={f.syllabusText} onChange={set("syllabusText")} /></label>
       <div><button className="primary" type="submit">Add course</button></div>

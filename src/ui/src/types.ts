@@ -15,6 +15,7 @@ export interface Institution { id: number; name: string; creditSystem: CreditSys
 export interface BuCourse {
   id: number; code: string; title: string; program: string; requirementType: string; credits: number;
   description?: string | null; verifiedStatus: "Yes" | "Check"; sourceUrl?: string | null; buOnlyRule?: string | null;
+  learningOutcomes?: string | null;
 }
 
 export interface CaseSummary {
@@ -46,6 +47,11 @@ export interface Course {
   creditSystem: CreditSystem; convertedCredits: number; grade?: string | null; term?: string | null;
   description?: string | null; hasSyllabus: boolean; status: CourseStatus; matchLevel?: string | null;
   appliedRule?: AppliedRule | null; topCandidate?: Candidate | null; evaluation?: Evaluation | null;
+  learningOutcomes?: string | null;
+  /** "T" once the case is posted and the course earned units. */
+  postedGrade?: string | null;
+  /** Always 0: transfer courses do not earn BU Hub units (BR-05). */
+  hubUnits: number;
 }
 
 export interface AgentRun {
@@ -80,15 +86,26 @@ export interface CaseDetail {
   documents: DocumentInfo[]; timeline: AuditEntry[];
 }
 
+export type Standing = "Secured" | "Pending review" | "At risk" | "No credit";
+
 export interface StudentCourse {
   id: number; code: string; title: string; institution: string; state: string; syllabusNeeded: boolean;
   awardedUnits: number; outcome?: string | null;
+  /** What the course could be worth after conversion. Never awarded until a final decision (BR-02). */
+  potentialUnits: number; standing: Standing; standingReason?: string | null; requirement?: string | null;
+  syllabusReason?: string | null; postedGrade?: string | null; hubUnits: number;
+}
+
+export interface DegreeProgress {
+  securedUnits: number; pendingUnits: number; atRiskUnits: number; coursesNeedingAction: number;
+  securedByRequirement: { requirement: string; units: number; courses: number }[];
 }
 
 export interface StudentStatus {
   caseId: number; caseRef: string; program: string; startDate: string; deadlineDate: string; daysRemaining: number;
   overdue: boolean; status: CaseStatus; nextAction: string; awardedUnits: number; pendingUnitsShown: number;
   courses: StudentCourse[]; timeline: { timestamp: string; message: string }[]; documents: DocumentInfo[];
+  progress: DegreeProgress; policyNotes: string[]; postedAt?: string | null;
 }
 
 export interface IntakeMessage {
@@ -102,6 +119,12 @@ export interface Metrics {
   approvedRuleHits: number; cacheHits: number; reuseRate: number; finalDecisions: number;
   finalDecisionsWithReviewer: number; agentRunsWithModelRecord: number; failedAgentRuns: number; casesWithDeadline: number;
   coursesByStatus: Record<string, number>;
+  /** Existing equivalencies applied without a new review (not counted in finalDecisions). */
+  appliedFromEquivalencyDb: number;
+  /** Primary outcome: median hours a course shows 0 units, case opened to final decision. */
+  medianHoursAtZeroUnits?: number | null;
+  medianHoursAtZeroUnitsReviewed?: number | null;
+  coursesStillAtZeroUnits: number;
 }
 
 export interface Overview {

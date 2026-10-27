@@ -56,6 +56,9 @@ public class CaseService(TransferCreditDbContext db, RuleSettingsService rules, 
 
         var institutionIds = request.Courses.Select(x => x.InstitutionId).Distinct().ToList();
         var institutions = await db.Institutions.Where(i => institutionIds.Contains(i.Id)).ToDictionaryAsync(i => i.Id, ct);
+        // Public catalogue entries give the evaluator a description and outcomes before any syllabus arrives.
+        var published = await db.SourceCatalogueCourses.AsNoTracking()
+            .Where(x => institutionIds.Contains(x.InstitutionId)).ToListAsync(ct);
 
         var added = new List<SourceCourse>();
         foreach (var item in request.Courses)
@@ -67,6 +70,8 @@ public class CaseService(TransferCreditDbContext db, RuleSettingsService rules, 
             if (item.Credits is <= 0 or > 20)
                 throw new ValidationFailedException($"{item.Code}: credits must be between 0 and 20.");
 
+            var entry = published.FirstOrDefault(x => x.InstitutionId == institution.Id
+                                                      && RulesEngine.NormaliseCode(x.Code) == RulesEngine.NormaliseCode(item.Code));
             var course = new SourceCourse
             {
                 CaseId = caseId,
@@ -79,7 +84,8 @@ public class CaseService(TransferCreditDbContext db, RuleSettingsService rules, 
                 ConvertedCredits = await rules.ConvertAsync(item.Credits, institution.CreditSystem, ct),
                 Grade = item.Grade?.Trim().ToUpperInvariant(),
                 Term = item.Term?.Trim(),
-                Description = item.Description?.Trim(),
+                Description = string.IsNullOrWhiteSpace(item.Description) ? entry?.Description : item.Description.Trim(),
+                LearningOutcomes = string.IsNullOrWhiteSpace(item.LearningOutcomes) ? entry?.LearningOutcomes : item.LearningOutcomes.Trim(),
                 SyllabusText = string.IsNullOrWhiteSpace(item.SyllabusText) ? null : item.SyllabusText.Trim(),
                 Status = CourseStatus.Pending
             };
@@ -134,11 +140,18 @@ public class CaseService(TransferCreditDbContext db, RuleSettingsService rules, 
             throw new ValidationFailedException("Every course needs a final evaluator decision before posting.");
         if (c.Status == CaseStatus.Posted) throw new ValidationFailedException("Case already posted.");
 
+        var finals = await db.Evaluations.AsNoTracking().Include(e => e.BUCourse)
+            .Where(e => e.SourceCourse!.CaseId == caseId && e.Status == EvaluationStatus.Final).ToListAsync(ct);
+        var posted = finals.Where(e => e.AwardedUnits > 0).ToList();
+
         c.Status = CaseStatus.Posted;
         c.PostedAt = clock.GetUtcNow();
         audit.Record(actorId, c.Id, AuditActions.CasePosted,
-            "SIMULATED posting to MyBU Student. No record was written to any BU system.",
-            studentMessage: "Final transfer credit results posted (demo simulation).");
+            $"SIMULATED posting to MyBU Student: {posted.Count} course(s), {posted.Sum(e => e.AwardedUnits)} units, " +
+            $"grade {RulesEngine.TransferGrade}, {RulesEngine.HubUnits} Hub units, not counted in BU GPA. " +
+            "No record was written to any BU system.",
+            studentMessage: $"Final transfer credit results posted (demo simulation): {posted.Sum(e => e.AwardedUnits)} units " +
+                            $"with a grade of {RulesEngine.TransferGrade}.");
         await db.SaveChangesAsync(ct);
     }
 
@@ -155,7 +168,7 @@ public class CaseService(TransferCreditDbContext db, RuleSettingsService rules, 
 
         return new CaseDetailDto(
             c.ToSummary(Today), c.StudentEmail, c.PostedAt,
-            c.Courses.OrderBy(x => x.Id).Select(x => x.ToDto(buOnly)).ToList(),
+            c.Courses.OrderBy(x => x.Id).Select(x => x.ToDto(buOnly, c.Status == CaseStatus.Posted)).ToList(),
             documents.Select(d => d.ToDto()).ToList(),
             timeline.Select(a => a.ToDto()).ToList());
     }
@@ -172,6 +185,8 @@ public class CaseService(TransferCreditDbContext db, RuleSettingsService rules, 
             .ToListAsync(ct);
         var documents = await db.Documents.AsNoTracking().Where(d => d.CaseId == caseId)
             .OrderByDescending(d => d.Id).ToListAsync(ct);
+        var minimumGrade = (await rules.GetAsync(ct)).MinimumGradeFor(c.Program);
+        var posted = c.Status == CaseStatus.Posted;
 
         var courses = c.Courses.OrderBy(x => x.Id).Select(x =>
         {
@@ -192,17 +207,79 @@ public class CaseService(TransferCreditDbContext db, RuleSettingsService rules, 
                 OutcomeType.NoCredit => "No credit",
                 _ => null
             };
+            var (standing, reason) = Standing(x, final, minimumGrade);
             return new StudentCourseDto(x.Id, x.Code, x.Title, x.Institution?.Name ?? "", state,
-                x.Status == CourseStatus.NeedsSyllabus, units, outcome);
+                x.Status == CourseStatus.NeedsSyllabus, units, outcome, x.ConvertedCredits, standing, reason,
+                final is null ? null : Requirement(final, c.Program),
+                x.Status == CourseStatus.NeedsSyllabus ? SyllabusReason(x) : null,
+                x.PostedGrade(posted), RulesEngine.HubUnits);
         }).ToList();
+
+        var progress = new DegreeProgressDto(
+            courses.Where(x => x.Standing == StandingSecured).Sum(x => x.AwardedUnits),
+            courses.Where(x => x.Standing == StandingPending).Sum(x => x.PotentialUnits),
+            courses.Where(x => x.Standing == StandingAtRisk).Sum(x => x.PotentialUnits),
+            courses.Count(x => x.SyllabusNeeded),
+            courses.Where(x => x.Standing == StandingSecured && x.Requirement is not null)
+                .GroupBy(x => x.Requirement!)
+                .Select(g => new RequirementProgressDto(g.Key, g.Sum(x => x.AwardedUnits), g.Count()))
+                .OrderByDescending(g => g.Units).ToList());
 
         return new StudentStatusDto(
             c.Id, c.CaseRef, c.Program, c.StartDate, c.DeadlineDate,
             RulesEngine.DaysRemaining(c.DeadlineDate, Today),
             c.Status != CaseStatus.Posted && RulesEngine.DaysRemaining(c.DeadlineDate, Today) < 0,
             c.Status, NextAction(c, documents.Count), courses.Sum(x => x.AwardedUnits), 0m,
-            courses, timeline, documents.Select(d => d.ToDto()).ToList());
+            courses, timeline, documents.Select(d => d.ToDto()).ToList(), progress, PolicyNotes(c), c.PostedAt);
     }
+
+    public const string StandingSecured = "Secured";
+    public const string StandingPending = "Pending review";
+    public const string StandingAtRisk = "At risk";
+    public const string StandingNoCredit = "No credit";
+
+    /// <summary>Where a course stands for the student, in plain words. Never shows pending units as awarded.</summary>
+    private static (string Standing, string? Reason) Standing(SourceCourse x, Evaluation? final, string minimumGrade)
+    {
+        if (final is not null)
+            return final.AwardedUnits > 0
+                ? (StandingSecured, null)
+                : (StandingNoCredit, "The department decided this course does not transfer for credit.");
+        if (x.Status == CourseStatus.Blocked)
+            return (StandingAtRisk, "Your program requires the matching BU course to be taken at BU, so this course may only count as elective units or not at all.");
+        if (RulesEngine.IsGradeBelowMinimum(x.Grade, minimumGrade) == true)
+            return (StandingAtRisk, $"Your grade ({x.Grade}) is below the minimum ({minimumGrade}) most BU schools require for credit.");
+        if (x.Status == CourseStatus.NeedsSyllabus)
+            return (StandingAtRisk, "It cannot be evaluated until we receive the syllabus.");
+        return (StandingPending, null);
+    }
+
+    /// <summary>The degree requirement a decided course counts toward, as far as the transfer record can tell.</summary>
+    private static string Requirement(Evaluation final, string program) => final.OutcomeType switch
+    {
+        OutcomeType.ElectiveCredit => "General elective units",
+        OutcomeType.NoCredit => "None",
+        _ when final.BUCourse is null => "General elective units",
+        _ when final.BUCourse.Program == program => final.BUCourse.RequirementType,
+        _ when final.BUCourse.RequirementType == "Math and science requirement" => final.BUCourse.RequirementType,
+        _ => "Outside the major (counts toward total units)"
+    };
+
+    private static string SyllabusReason(SourceCourse x) =>
+        $"BU has no existing equivalency for {x.Code}, so a department evaluator must compare its syllabus " +
+        "(topics, learning outcomes and credit hours) with BU courses. Send the syllabus for the term you took it" +
+        (x.Term is null ? "" : $" ({x.Term})") +
+        ". If you no longer have it, the department office or a former instructor at " +
+        $"{x.Institution?.Name ?? "your previous school"} can usually provide one.";
+
+    private static List<string> PolicyNotes(TransferCase c) =>
+    [
+        "Courses under review show 0 units until a department evaluator decides. Their potential units are shown separately and are not awarded yet.",
+        $"Transfer credit is posted to MyBU Student with a grade of {RulesEngine.TransferGrade}. Grades from other institutions do not count toward your BU GPA.",
+        "Transfer courses do not earn BU Hub general education units.",
+        $"All credits must be transferred by {c.DeadlineDate:MMMM d, yyyy}, one year after you start at BU.",
+        "Only secured units are final. Use the secured figure when you talk to your advisor or the financial aid office; pending units are not guaranteed."
+    ];
 
     private static string NextAction(TransferCase c, int documentCount)
     {
@@ -228,11 +305,18 @@ public class CaseService(TransferCreditDbContext db, RuleSettingsService rules, 
             .Where(r => r.Program == program && r.RuleType == ProgramRuleType.MustBeTakenAtBu)
             .ToDictionaryAsync(r => r.BUCourseId, r => r.Source, ct);
 
-    /// <summary>Creates a new synthetic case from the six-course demo template in demo.json.</summary>
-    public async Task<TransferCase> CreateDemoCaseAsync(string studentRef, string actorId, CancellationToken ct)
+    /// <summary>
+    /// Creates a new synthetic case from a demo.json template. The default is the brief's six-course scenario
+    /// (community college: 3 existing equivalencies, 2 "maybe", 1 quarter-system course).
+    /// </summary>
+    public async Task<TransferCase> CreateDemoCaseAsync(string studentRef, string actorId, CancellationToken ct, string? templateName = null)
     {
         var demo = SeedData.LoadDemo();
-        var template = demo.Cases[0];
+        var template = string.IsNullOrWhiteSpace(templateName)
+            ? demo.Cases[0]
+            : demo.Cases.FirstOrDefault(x => string.Equals(x.Template, templateName.Trim(), StringComparison.OrdinalIgnoreCase))
+              ?? throw new ValidationFailedException(
+                  $"Unknown demo template '{templateName}'. Use one of: {string.Join(", ", demo.Cases.Select(x => x.Template))}.");
         var user = demo.Users.FirstOrDefault(u => u.StudentRef == studentRef)
             ?? throw new ValidationFailedException($"Unknown demo student {studentRef}.");
 

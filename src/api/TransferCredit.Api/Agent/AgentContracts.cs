@@ -14,14 +14,16 @@ public record AgentSourceCourse(
     [property: JsonPropertyName("creditSystem")] string CreditSystem,
     [property: JsonPropertyName("grade")] string? Grade,
     [property: JsonPropertyName("term")] string? Term,
-    [property: JsonPropertyName("description")] string? Description);
+    [property: JsonPropertyName("description")] string? Description,
+    [property: JsonPropertyName("learningOutcomes")] string? LearningOutcomes = null);
 
 public record AgentCatalogueCourse(
     [property: JsonPropertyName("code")] string Code,
     [property: JsonPropertyName("title")] string Title,
     [property: JsonPropertyName("credits")] decimal Credits,
     [property: JsonPropertyName("description")] string? Description,
-    [property: JsonPropertyName("verified")] string Verified);
+    [property: JsonPropertyName("verified")] string Verified,
+    [property: JsonPropertyName("learningOutcomes")] string? LearningOutcomes = null);
 
 public record AgentEvaluateRequest(
     [property: JsonPropertyName("courseId")] string CourseId,

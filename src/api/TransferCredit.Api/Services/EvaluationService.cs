@@ -73,6 +73,9 @@ public class EvaluationService(
 
         var units = request.OutcomeType == OutcomeType.NoCredit ? 0m : request.AwardedUnits ?? course.ConvertedCredits;
         if (units < 0 || units > 20) throw new ValidationFailedException("Awarded units must be between 0 and 20.");
+        // BR-09: elective credit "counts as units". Zero units is the no-credit outcome.
+        if (request.OutcomeType != OutcomeType.NoCredit && units == 0)
+            throw new ValidationFailedException("A BU equivalent or elective credit must award more than 0 units. Choose No credit for 0 units.");
         return units;
     }
 
@@ -124,19 +127,35 @@ public class EvaluationService(
     {
         if (user.IsInRole(nameof(UserRole.Evaluator)) || user.IsInRole(nameof(UserRole.Admin))) return;
 
-        // Staff may only confirm an approved equivalency exactly as it stands.
+        // Staff may only confirm an approved equivalency exactly as it stands, including the units it implies.
         if (user.IsInRole(nameof(UserRole.Staff)) && course.AppliedEquivalencyRuleId is { } ruleId)
         {
             var rule = await db.EquivalencyRules.AsNoTracking().FirstAsync(r => r.Id == ruleId, ct);
-            if (rule.OutcomeType == evaluation.OutcomeType && rule.BUCourseId == evaluation.BUCourseId) return;
+            if (rule.OutcomeType == evaluation.OutcomeType && rule.BUCourseId == evaluation.BUCourseId
+                && evaluation.AwardedUnits == UnitsFor(rule.OutcomeType, course)) return;
         }
         throw new ForbiddenActionException(
-            "Only a department evaluator can finalise this decision. Staff can only confirm an existing approved equivalency.");
+            "Only a department evaluator can finalise this decision. Staff can only confirm an existing approved equivalency as it stands.");
     }
+
+    /// <summary>Units an approved equivalency awards this student: converted credits, or 0 for no credit.</summary>
+    public static decimal UnitsFor(OutcomeType outcome, SourceCourse course) =>
+        outcome == OutcomeType.NoCredit ? 0m : course.ConvertedCredits;
 
     /// <summary>Write-back: the next student with identical evidence resolves without an AI call.</summary>
     private async Task SaveForReuseAsync(Evaluation evaluation, SourceCourse course, string program, ClaimsPrincipal user, CancellationToken ct)
     {
+        // The reuse key covers the course, not the student. When this student's grade failed or could not be checked,
+        // the decision may rest on that grade, so saving it would hand the same outcome to the next student (BR-14).
+        var flags = await rules.ComputeFlagsAsync(course, program, ct);
+        if (flags.GradeBelowMinimum != false)
+        {
+            audit.Record(user.Id(), course.CaseId, AuditActions.EquivalencyNotSaved,
+                $"{course.Code}: decision not saved for reuse because the grade ({course.Grade ?? "missing"}) " +
+                $"{(flags.GradeBelowMinimum == true ? "is below" : "could not be checked against")} the minimum {flags.MinimumGrade}.");
+            return;
+        }
+
         if (course.AppliedEquivalencyRuleId is { } appliedId)
         {
             var applied = await db.EquivalencyRules.AsNoTracking().FirstAsync(r => r.Id == appliedId, ct);

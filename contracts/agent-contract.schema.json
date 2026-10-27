@@ -20,7 +20,8 @@
         "creditSystem": { "enum": ["semester", "quarter"] },
         "grade": { "type": ["string", "null"] },
         "term": { "type": ["string", "null"] },
-        "description": { "type": ["string", "null"] }
+        "description": { "type": ["string", "null"] },
+        "learningOutcomes": { "type": ["string", "null"] }
       }
     },
     "policyFlags": {
@@ -46,7 +47,8 @@
         "title": { "type": "string" },
         "credits": { "type": "number" },
         "description": { "type": ["string", "null"] },
-        "verified": { "enum": ["Yes", "Check"] }
+        "verified": { "enum": ["Yes", "Check"] },
+        "learningOutcomes": { "type": ["string", "null"] }
       }
     },
     "candidate": {
