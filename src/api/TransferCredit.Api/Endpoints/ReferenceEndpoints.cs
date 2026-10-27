@@ -283,20 +283,11 @@ public static class ReferenceEndpoints
         // ---------- Demo helpers ----------
         var demo = app.MapGroup("/api/demo").WithTags("Demo");
 
-        demo.MapGet("/users", async (TransferCreditDbContext db, CancellationToken ct) =>
-            await db.DemoUsers.AsNoTracking().OrderBy(u => u.Role).ThenBy(u => u.Id)
-                .Select(u => new DemoUserDto(u.Id, u.DisplayName, u.Role, u.StudentRef)).ToListAsync(ct));
-
         demo.MapPost("/cases", async (CreateDemoCaseRequest request, CaseService cases, ClaimsPrincipal user, CancellationToken ct) =>
         {
             var c = await cases.CreateDemoCaseAsync(request.StudentRef, user.Id(), ct, request.Template);
             return Results.Ok(new { c.Id, c.CaseRef });
         }).RequireAuthorization(Policies.Staff);
-
-        app.MapGet("/api/me", (ClaimsPrincipal user) => Results.Ok(new
-        {
-            id = user.Id(), name = user.Identity?.Name, role = user.FindFirstValue(ClaimTypes.Role), studentRef = user.StudentRef()
-        })).RequireAuthorization().WithTags("Demo");
 
         // ---------- Health (used by the pipeline smoke test; no auth) ----------
         app.MapGet("/health", () => Results.Ok(new { status = "ok" })).WithTags("Health");

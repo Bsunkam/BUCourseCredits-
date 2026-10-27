@@ -27,9 +27,26 @@ public record CreateDemoCaseRequest(string StudentRef, string? Template = null);
 
 public record UpdateSettingRequest(string Value);
 
+public record SignInRequest(string Username, string Password);
+
+public record ChangePasswordRequest(string CurrentPassword, string NewPassword);
+
+public record CreateUserRequest(string Id, string DisplayName, UserRole Role, string? Email, string? StudentRef, string Password);
+
+public record UpdateUserRequest(string DisplayName, UserRole Role, string? Email, string? StudentRef, bool IsActive);
+
+public record ResetPasswordRequest(string NewPassword);
+
 // ---------- Responses ----------
 
-public record DemoUserDto(string Id, string DisplayName, UserRole Role, string? StudentRef);
+public record CurrentUserDto(string Id, string DisplayName, UserRole Role, string? Email, string? StudentRef, bool MustChangePassword);
+
+public record UserAccountDto(
+    string Id, string DisplayName, UserRole Role, string? Email, string? StudentRef, bool IsActive,
+    bool IsLocked, bool HasPassword, bool MustChangePassword, DateTimeOffset? LastSignInAt);
+
+/// <summary>Listed on the sign-in page only when Auth:ShowDemoAccounts is on (Development).</summary>
+public record DemoAccountDto(string Username, string DisplayName, UserRole Role);
 
 public record InstitutionDto(int Id, string Name, CreditSystem CreditSystem, string? CatalogueSource);
 

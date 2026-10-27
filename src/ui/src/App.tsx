@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { Navigate, NavLink, Route, Routes, useNavigate } from "react-router-dom";
-import { api, getDemoUser, setDemoUser } from "./api";
-import { isReviewer, isStaff, Loading, UserContext } from "./components";
-import type { DemoUser } from "./types";
+import { useCallback, useEffect, useState } from "react";
+import { Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { api, ApiError, SIGNED_OUT_EVENT } from "./api";
+import { isAdmin, isReviewer, isStaff, Loading, UserContext } from "./components";
+import { roleLabel } from "./labels";
+import type { CurrentUser } from "./types";
 import CasesPage from "./pages/CasesPage";
 import CaseDetailPage from "./pages/CaseDetailPage";
 import WorkbenchPage from "./pages/WorkbenchPage";
@@ -13,29 +14,55 @@ import StatusPage from "./pages/StatusPage";
 import MetricsPage from "./pages/MetricsPage";
 import DashboardPage from "./pages/DashboardPage";
 import OverviewPage from "./pages/OverviewPage";
+import LoginPage from "./pages/LoginPage";
+import AccountPage from "./pages/AccountPage";
+import UsersPage from "./pages/UsersPage";
 
-const home = (user: DemoUser) => user.role === "Student" ? "/my" : user.role === "Advisor" ? "/cases" : "/dashboard";
+const home = (user: CurrentUser) => user.role === "Student" ? "/my" : user.role === "Advisor" ? "/cases" : "/dashboard";
 
 export default function App() {
-  const [users, setUsers] = useState<DemoUser[] | null>(null);
-  const [userId, setUserId] = useState<string | null>(getDemoUser());
+  // undefined: still asking the API who is signed in; null: nobody.
+  const [user, setUser] = useState<CurrentUser | null | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    api.get<DemoUser[]>("/api/demo/users").then(setUsers).catch((e) => setError(e.message));
+    api.get<CurrentUser>("/api/me")
+      .then(setUser)
+      .catch((e) => (e instanceof ApiError && e.status === 401 ? setUser(null) : setError(e.message)));
   }, []);
 
-  const user = users?.find((u) => u.id === userId) ?? null;
+  // Any 401 means the session is gone (expired, signed out elsewhere, account disabled or changed).
+  useEffect(() => {
+    const ended = () => {
+      setUser(null);
+      setNotice("Your session has ended. Sign in again to continue.");
+    };
+    window.addEventListener(SIGNED_OUT_EVENT, ended);
+    return () => window.removeEventListener(SIGNED_OUT_EVENT, ended);
+  }, []);
 
-  function switchUser(id: string) {
-    setDemoUser(id || null);
-    setUserId(id || null);
-    navigate("/");
+  // Return to the page that asked for sign-in (a shared case link, say); the role's routes still decide what opens.
+  const signedIn = useCallback((u: CurrentUser) => {
+    setNotice(null);
+    setUser(u);
+    const wanted = location.pathname;
+    const target = u.mustChangePassword ? "/account"
+      : wanted === "/" || wanted === "/login" || wanted === "/overview" ? home(u) : wanted + location.search;
+    navigate(target, { replace: true });
+  }, [navigate, location.pathname, location.search]);
+
+  async function signOut() {
+    try { await api.post("/api/auth/logout"); } catch { /* the session is dropped locally either way */ }
+    setUser(null);
+    setNotice("You have signed out.");
+    navigate("/login", { replace: true });
   }
 
   if (error) return <main><div className="alert error">Cannot reach the API: {error}</div></main>;
-  if (!users) return <Loading what="Starting" />;
+  if (user === undefined) return <Loading what="Starting" />;
 
   return (
     <UserContext.Provider value={user}>
@@ -43,8 +70,8 @@ export default function App() {
       <aside className="sidebar">
         <span className="brand"><span className="brand-mark">TC</span>Transfer Credit Review</span>
         <nav className="nav" aria-label="Main">
-          <NavLink to="/overview" className={({ isActive }) => (isActive || !user ? "active" : "")}>Overview</NavLink>
-          {user && (
+          {(!user || !user.mustChangePassword) && <NavLink to="/overview">Overview</NavLink>}
+          {user && !user.mustChangePassword && (
             user.role === "Student" ? (
               <NavLink to="/my">My transfer credit</NavLink>
             ) : user.role === "Advisor" ? (
@@ -57,18 +84,24 @@ export default function App() {
                 {isStaff(user) && <NavLink to="/intake">Email triage</NavLink>}
                 <NavLink to="/catalogue">Catalogue & rules</NavLink>
                 <NavLink to="/metrics">Metrics & AI evidence</NavLink>
+                {isAdmin(user) && <NavLink to="/admin/users">Users & roles</NavLink>}
               </>
             )
           )}
         </nav>
         <span className="spacer" />
-        <label className="field">
-          Demo user
-          <select value={userId ?? ""} onChange={(e) => switchUser(e.target.value)} aria-label="Demo user">
-            <option value="">Choose…</option>
-            {users.map((u) => <option key={u.id} value={u.id}>{u.displayName}</option>)}
-          </select>
-        </label>
+        {user ? (
+          <div className="user-box">
+            <span className="user-name">{user.displayName}</span>
+            <span className="user-role">{roleLabel[user.role]}</span>
+            <div className="row">
+              {!user.mustChangePassword && <NavLink to="/account" className="user-link">Account</NavLink>}
+              <button onClick={() => void signOut()}>Sign out</button>
+            </div>
+          </div>
+        ) : (
+          <NavLink to="/login" className="button primary sign-in-link">Sign in</NavLink>
+        )}
       </aside>
       <div className="content">
       <div className="demo-banner">
@@ -77,10 +110,19 @@ export default function App() {
       </div>
       <main>
         {!user ? (
-          <OverviewPage />
+          <Routes>
+            <Route path="/login" element={<LoginPage onSignedIn={signedIn} notice={notice} />} />
+            <Route path="/overview" element={<OverviewPage />} />
+            {/* Any other page needs a session: show sign-in, then land on the role's home page. */}
+            <Route path="*" element={<LoginPage onSignedIn={signedIn} notice={notice} />} />
+          </Routes>
+        ) : user.mustChangePassword ? (
+          <AccountPage required onChanged={(u) => { setUser(u); navigate(home(u), { replace: true }); }} />
         ) : (
           <Routes>
             <Route path="/" element={<Navigate to={home(user)} replace />} />
+            <Route path="/login" element={<Navigate to={home(user)} replace />} />
+            <Route path="/account" element={<AccountPage onChanged={setUser} />} />
             <Route path="/my" element={<StudentPage />} />
             <Route path="/overview" element={<OverviewPage signedIn />} />
             <Route path="/dashboard" element={isReviewer(user) ? <DashboardPage /> : <Navigate to="/" replace />} />
@@ -91,6 +133,7 @@ export default function App() {
             <Route path="/intake" element={<IntakePage />} />
             <Route path="/catalogue" element={isReviewer(user) ? <CataloguePage /> : <Navigate to="/" replace />} />
             <Route path="/metrics" element={isReviewer(user) ? <MetricsPage /> : <Navigate to="/" replace />} />
+            <Route path="/admin/users" element={isAdmin(user) ? <UsersPage /> : <Navigate to="/" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         )}
@@ -100,4 +143,3 @@ export default function App() {
     </UserContext.Provider>
   );
 }
-

@@ -48,7 +48,7 @@ Start-Process powershell -WorkingDirectory $api -ArgumentList "-NoExit", "-Comma
 Start-Process powershell -WorkingDirectory $ui -ArgumentList "-NoExit", "-Command", "npm run dev"
 
 Write-Host "API: http://localhost:5090/swagger  (http://localhost:5090/ serves the last 'npm run build' of the UI)"
-Write-Host "UI:  http://localhost:5190  (pick a demo user top-right)"
+Write-Host "UI:  http://localhost:5190  (sign in, e.g. staff-1 / TransferDemo#2026; the sign-in page lists the demo accounts)"
 if ($AgentUrl) {
     $mode = if ($env:AZURE_OPENAI_ENDPOINT) { "Azure OpenAI ($env:AZURE_OPENAI_CHAT_DEPLOYMENT)" } else { "mock keyword ranking, not AI" }
     Write-Host "Agent: $AgentUrl/health  ($mode)"

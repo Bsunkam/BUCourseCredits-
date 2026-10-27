@@ -5,7 +5,7 @@ namespace TransferCredit.Data;
 
 public class TransferCreditDbContext(DbContextOptions<TransferCreditDbContext> options) : DbContext(options)
 {
-    public DbSet<DemoUser> DemoUsers => Set<DemoUser>();
+    public DbSet<AppUser> Users => Set<AppUser>();
     public DbSet<TransferCase> Cases => Set<TransferCase>();
     public DbSet<SourceInstitution> Institutions => Set<SourceInstitution>();
     public DbSet<SourceCourse> SourceCourses => Set<SourceCourse>();
@@ -31,11 +31,17 @@ public class TransferCreditDbContext(DbContextOptions<TransferCreditDbContext> o
 
     protected override void OnModelCreating(ModelBuilder b)
     {
-        b.Entity<DemoUser>(e =>
+        b.Entity<AppUser>(e =>
         {
+            e.ToTable("Users");
             e.Property(x => x.Id).HasMaxLength(64);
             e.Property(x => x.DisplayName).HasMaxLength(200);
+            e.Property(x => x.Email).HasMaxLength(320);
+            e.HasIndex(x => x.Email).IsUnique().HasFilter("[Email] IS NOT NULL");
             e.Property(x => x.StudentRef).HasMaxLength(64);
+            e.Property(x => x.PasswordHash).HasMaxLength(256);
+            e.Property(x => x.SecurityStamp).HasMaxLength(64);
+            e.Property(x => x.IsActive).HasDefaultValue(true);
         });
 
         b.Entity<TransferCase>(e =>

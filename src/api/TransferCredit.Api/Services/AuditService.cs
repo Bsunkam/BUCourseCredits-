@@ -48,4 +48,12 @@ public static class AuditActions
     public const string EquivalencyNotSaved = "EquivalencyNotSaved";
     public const string EquivalencyApplied = "EquivalencyApplied";
     public const string CasePosted = "CasePostedSimulated";
+    public const string UserSignedIn = "UserSignedIn";
+    public const string UserSignedOut = "UserSignedOut";
+    public const string SignInFailed = "SignInFailed";
+    public const string PasswordChanged = "PasswordChanged";
+    public const string PasswordReset = "PasswordReset";
+    public const string UserCreated = "UserCreated";
+    public const string UserUpdated = "UserUpdated";
+    public const string UserImported = "UserImported";
 }

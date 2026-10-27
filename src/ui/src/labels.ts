@@ -1,6 +1,14 @@
-import type { CaseStatus, CourseStatus, OutcomeType, ScanStatus, Standing } from "./types";
+import type { CaseStatus, CourseStatus, OutcomeType, ScanStatus, Standing, UserRole } from "./types";
 
 export type Tone = "neutral" | "info" | "warn" | "danger" | "success" | "accent";
+
+export const roleLabel: Record<UserRole, string> = {
+  Staff: "Credit Evaluation staff",
+  Evaluator: "Department evaluator",
+  Admin: "Administrator",
+  Advisor: "Advisor (read-only)",
+  Student: "Student",
+};
 
 // Distinct states (governance rule): nothing AI-suggested may look like an official BU decision.
 export const courseStatus: Record<CourseStatus, { label: string; tone: Tone }> = {

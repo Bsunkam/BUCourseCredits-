@@ -1,7 +1,8 @@
 namespace TransferCredit.Data.Entities;
 
 /// <summary>Demo-only user. Production uses Microsoft Entra ID; see README.</summary>
-public class DemoUser
+/// <summary>A sign-in account. <see cref="Id"/> is the username and the actor id written to the audit trail.</summary>
+public class AppUser
 {
     public string Id { get; set; } = "";
     public string DisplayName { get; set; } = "";
@@ -10,6 +11,18 @@ public class DemoUser
 
     /// <summary>For students: the synthetic student reference that links them to their cases.</summary>
     public string? StudentRef { get; set; }
+
+    /// <summary>ASP.NET Core Identity password hash (PBKDF2). Null until a password is set: the account cannot sign in.</summary>
+    public string? PasswordHash { get; set; }
+
+    public bool IsActive { get; set; } = true;
+    public bool MustChangePassword { get; set; }
+    public int FailedSignInCount { get; set; }
+    public DateTimeOffset? LockoutEnd { get; set; }
+    public DateTimeOffset? LastSignInAt { get; set; }
+
+    /// <summary>Changes on password, role or status changes; sessions carrying an older stamp are rejected.</summary>
+    public string SecurityStamp { get; set; } = Guid.NewGuid().ToString("N");
 }
 
 public class TransferCase

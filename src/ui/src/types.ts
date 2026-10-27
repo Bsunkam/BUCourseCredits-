@@ -9,7 +9,16 @@ export type OutcomeType = "BuEquivalent" | "ElectiveCredit" | "NoCredit";
 export type ScanStatus = "Pending" | "Clean" | "Quarantined";
 export type DocumentType = "Transcript" | "Syllabus" | "Other";
 
-export interface DemoUser { id: string; displayName: string; role: UserRole; studentRef?: string | null }
+/** The signed-in account (GET /api/me). */
+export interface CurrentUser {
+  id: string; displayName: string; role: UserRole; email?: string | null; studentRef?: string | null; mustChangePassword: boolean;
+}
+/** A row on the admin Users page. */
+export interface UserAccount {
+  id: string; displayName: string; role: UserRole; email?: string | null; studentRef?: string | null; isActive: boolean;
+  isLocked: boolean; hasPassword: boolean; mustChangePassword: boolean; lastSignInAt?: string | null;
+}
+export interface DemoAccount { username: string; displayName: string; role: UserRole }
 export interface Institution { id: number; name: string; creditSystem: CreditSystem; catalogueSource?: string | null }
 
 export interface BuCourse {

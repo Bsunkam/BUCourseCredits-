@@ -640,3 +640,142 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    ALTER TABLE [DemoUsers] DROP CONSTRAINT [PK_DemoUsers];
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    EXEC sp_rename N'[DemoUsers]', N'Users';
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    ALTER TABLE [Users] ADD CONSTRAINT [PK_Users] PRIMARY KEY ([Id]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    UPDATE [Users] SET [Email] = LOWER([Email]) WHERE [Email] IS NOT NULL;
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    DECLARE @var0 sysname;
+    SELECT @var0 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Users]') AND [c].[name] = N'Email');
+    IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [Users] DROP CONSTRAINT [' + @var0 + '];');
+    ALTER TABLE [Users] ALTER COLUMN [Email] nvarchar(320) NULL;
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    ALTER TABLE [Users] ADD [PasswordHash] nvarchar(256) NULL;
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    ALTER TABLE [Users] ADD [IsActive] bit NOT NULL DEFAULT CAST(1 AS bit);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    ALTER TABLE [Users] ADD [MustChangePassword] bit NOT NULL DEFAULT CAST(0 AS bit);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    ALTER TABLE [Users] ADD [FailedSignInCount] int NOT NULL DEFAULT 0;
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    ALTER TABLE [Users] ADD [LockoutEnd] datetimeoffset NULL;
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    ALTER TABLE [Users] ADD [LastSignInAt] datetimeoffset NULL;
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    ALTER TABLE [Users] ADD [SecurityStamp] nvarchar(64) NOT NULL DEFAULT (REPLACE(CONVERT(nvarchar(36), NEWID()), '-', ''));
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    EXEC(N'CREATE UNIQUE INDEX [IX_Users_Email] ON [Users] ([Email]) WHERE [Email] IS NOT NULL');
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261027124601_RoleBasedSignIn'
+)
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20261027124601_RoleBasedSignIn', N'8.0.11');
+END;
+GO
+
+COMMIT;
+GO
+

@@ -55,8 +55,50 @@ npm install
 npm run dev                                                      # http://localhost:5190
 ```
 
-Pick a demo user in the top-right corner. Each role sees a different view: staff, department evaluator, admin,
-advisor, or student.
+Sign in with one of the seeded accounts. In Development every account's password is `TransferDemo#2026`
+(`Auth:SeedPassword` in `appsettings.Development.json`), and the sign-in page lists the usernames:
+
+| Username | Role |
+| --- | --- |
+| `staff-1` | Credit Evaluation staff |
+| `eval-cs` | Department evaluator (CS) |
+| `admin-1` | Admin (also manages accounts on **Users & roles**) |
+| `advisor-1` | Advisor (read-only) |
+| `student-a`, `student-b` | Students DS-0001 and DS-0002 |
+
+You can also sign in with the account's email address. Each role sees a different view.
+
+### Setting real usernames, emails and passwords for existing accounts
+
+1. Write a CSV file **outside the repository**, for example `D:\Source\users-import.csv`. Files named
+   `*users-import*.csv` are git-ignored as a safety net.
+
+   ```csv
+   currentUsername,newUsername,email,password
+   staff-1,s.rivera,s.rivera@bu.edu,<password>
+   eval-cs,,e.chen@bu.edu,"<password, with a comma>"
+   ```
+
+   - `currentUsername` is the existing account: `staff-1`, `eval-cs`, `admin-1`, `advisor-1`, `student-a` or `student-b`.
+   - Leave `newUsername` or `email` empty to keep the current value.
+   - Roles and student references never change.
+   - Put a password in double quotes if it contains a comma or a quote.
+2. Stop the API: the command shares its build output. Then run it from `src/api/TransferCredit.Api`, against the
+   database the connection string points at:
+
+   ```powershell
+   $env:ASPNETCORE_ENVIRONMENT = "Development"
+   dotnet run --no-launch-profile -- import-users D:\Source\users-import.csv --dry-run   # check only
+   dotnet run --no-launch-profile -- import-users D:\Source\users-import.csv            # apply
+   ```
+
+   - Every row is checked first. If any row is invalid, no account changes, and the command lists each problem
+     without showing passwords.
+   - Imported accounts must choose a new password at first sign-in. Add `--no-password-change` if each person chose
+     their own password.
+   - Open sessions end, and lockouts are cleared.
+   - Each change is audited as `UserImported`. Past audit events keep the old username.
+3. Delete the CSV file.
 
 With no `AGENT_BASE_URL` set, the API uses a **stub agent**: a keyword-overlap ranker labelled "not AI". To use the
 real agent service:
@@ -72,7 +114,7 @@ uvicorn app.main:app --port 8000                    # AGENT_MODE=mock unless AZU
 ### Tests
 
 ```powershell
-dotnet test TransferCredit.sln              # 36 xUnit tests
+dotnet test TransferCredit.sln              # 48 xUnit tests (12 cover sign-in and roles)
 cd src/ui; npm run lint; npm test           # typecheck + vitest
 cd src/agent; pytest                        # agent graph in mock mode (12 tests)
 cd src/agent; $env:AGENT_MODE="mock"; python -m eval.run_eval eval/labelled_cases.json   # match agreement table
@@ -133,6 +175,8 @@ Environment variable names match the deployment guide.
 | Setting | Purpose |
 | --- | --- |
 | `ConnectionStrings__Default` | Azure SQL (Key Vault secret `sql-conn`). Required. |
+| `Auth__SeedPassword`, `Auth__SeedPasswordMustChange` | Password for seeded accounts that have none. Empty (default) = they cannot sign in. |
+| `Auth__MaxFailedSignIns`, `Auth__LockoutMinutes`, `Auth__SessionHours`, `Auth__SignInAttemptsPerMinute`, `Auth__MinPasswordLength` | Sign-in limits (defaults 5, 15, 8, 10, 10). |
 | `AGENT_BASE_URL` | Internal URL of the agent container app. Empty = stub agent. |
 | `STORAGE_ACCOUNT_URL` | Blob Storage account. Empty = local disk under `App_Data/storage`. |
 | `Storage__ScanMode` | `Defender` (read Defender for Storage index tags) or `Simulated` (EICAR check, local only). |
@@ -142,8 +186,23 @@ Environment variable names match the deployment guide.
 
 ## Known gaps and decisions
 
-- **Demo sign-in only.** The `X-Demo-User` header picks a seeded synthetic user. Replace it with Microsoft Entra ID
-  before any real use.
+- **Local accounts, not single sign-on.** Accounts live in the `Users` table and sign in with a username and password:
+  - Passwords are hashed with PBKDF2 (ASP.NET Core Identity `PasswordHasher`).
+  - The session is an HttpOnly, SameSite=Strict cookie, Secure in Production.
+  - Every request is checked against the account, so disabling an account, changing its role or resetting its password
+    ends its sessions at once.
+  - Five wrong passwords lock the account for 15 minutes.
+  - Sign-in is rate limited per client IP.
+  - Admins create accounts, change roles, reset passwords and unlock accounts on **Users & roles**. New and reset
+    accounts must choose their own password at the next sign-in.
+
+  For BU use, add Microsoft Entra ID single sign-on and map its app roles to `UserRole`; the policies stay as they are.
+- **Bootstrapping an environment:** seeded accounts get no password unless `Auth__SeedPassword` is set. In Azure, set
+  it from Key Vault for the first start, sign in as `admin-1`, choose a new password, set the other accounts' passwords,
+  then remove the setting. `Auth__SeedPasswordMustChange` defaults to true outside Development.
+- **Behind a proxy**, the sign-in rate limit sees the proxy's address unless forwarded headers are configured. The
+  per-account lockout does not depend on the address. With more than one API instance, share the Data Protection keys
+  (App Service does this by default) so sessions survive moving between instances.
 - **LangGraph checkpointer is in memory.** Paused review threads are lost on restart or across replicas. The
   decision itself is always stored in SQL, and `/agent/resume` tolerates a missing thread. Use a persistent
   checkpointer if the agent runs with more than one replica.

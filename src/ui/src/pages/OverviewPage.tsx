@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { BarChart, ChartCard, DonutChart, LineChart, pct, SERIES, type Segment } from "../charts";
 import { Badge, DetailPanel, ErrorAlert, Loading, Stat, useLoad } from "../components";
 import { caseStatus, courseStatus, formatBytes, formatDate, outcomeLabel, scanStatus } from "../labels";
@@ -158,7 +159,7 @@ const slices = (entries: [string, string][], counts: Record<string, number>): Se
 
 const shortDate = (iso: string) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 
-/** Whole-application statistics, shown before anyone picks a demo user. Aggregate counts only. */
+/** Whole-application statistics, shown before anyone signs in. Aggregate counts only. */
 export default function OverviewPage({ signedIn = false }: { signedIn?: boolean }) {
   const { data, error, reload } = useLoad<Overview>("/api/overview");
 
@@ -172,7 +173,7 @@ export default function OverviewPage({ signedIn = false }: { signedIn?: boolean 
         <button onClick={() => void reload()}>Refresh</button>
       </div>
       {!signedIn && (
-        <div className="alert info">Pick a <strong>demo user</strong> in the sidebar to open cases, review courses or see a student’s view.</div>
+        <div className="alert info"><Link to="/login"><strong>Sign in</strong></Link> to open cases, review courses or see your own transfer credit.</div>
       )}
       <ErrorAlert error={error} />
       {!data ? <Loading /> : <Charts o={data} />}

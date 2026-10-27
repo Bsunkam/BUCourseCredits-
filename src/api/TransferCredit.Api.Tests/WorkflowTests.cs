@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -25,6 +25,9 @@ public class ApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Storage:LocalRoot", _storage);
         builder.UseSetting("Storage:ScanMode", "Simulated");
         builder.UseSetting("AGENT_BASE_URL", "");
+        builder.UseSetting("Auth:SeedPassword", SeedPassword);
+        builder.UseSetting("Auth:SeedPasswordMustChange", "false");
+        builder.UseSetting("Auth:SignInAttemptsPerMinute", "1000");
         builder.ConfigureServices(services =>
         {
             services.RemoveAll<DbContextOptions<TransferCreditDbContext>>();
@@ -32,10 +35,14 @@ public class ApiFactory : WebApplicationFactory<Program>
         });
     }
 
-    public HttpClient As(string userId)
+    public const string SeedPassword = "Test-password-2026";
+
+    /// <summary>A client signed in through the real login endpoint; the session cookie rides on every request.</summary>
+    public async Task<HttpClient> AsAsync(string userId, string password = SeedPassword)
     {
         var client = CreateClient();
-        client.DefaultRequestHeaders.Add("X-Demo-User", userId);
+        var response = await client.PostAsJsonAsync("/api/auth/login", new { username = userId, password });
+        response.EnsureSuccessStatusCode();
         return client;
     }
 
@@ -107,7 +114,7 @@ public sealed class WorkflowTests : IDisposable
     [Fact]
     public async Task Six_course_demo_follows_the_brief()
     {
-        var staff = factory.As("staff-1");
+        var staff = await factory.AsAsync("staff-1");
         var caseId = await CreateDemoCaseAsync(staff, "DS-0001");
         var byCode = (await MatchAsync(staff, caseId)).Courses.ToDictionary(c => c.Code);
 
@@ -142,9 +149,9 @@ public sealed class WorkflowTests : IDisposable
     [Fact]
     public async Task Six_course_demo_runs_from_syllabus_to_posting_with_grade_T()
     {
-        var staff = factory.As("staff-1");
-        var evaluator = factory.As("eval-cs");
-        var student = factory.As("student-a");
+        var staff = await factory.AsAsync("staff-1");
+        var evaluator = await factory.AsAsync("eval-cs");
+        var student = await factory.AsAsync("student-a");
         var caseId = await CreateDemoCaseAsync(staff, "DS-0001");
         var byCode = (await MatchAsync(staff, caseId)).Courses.ToDictionary(c => c.Code);
 
@@ -189,7 +196,7 @@ public sealed class WorkflowTests : IDisposable
     [Fact]
     public async Task Northeastern_demo_shows_bu_only_block_grade_gate_and_unverified_mapping()
     {
-        var staff = factory.As("staff-1");
+        var staff = await factory.AsAsync("staff-1");
         var caseId = await CreateDemoCaseAsync(staff, "DS-0001", Northeastern);
         var byCode = (await MatchAsync(staff, caseId)).Courses.ToDictionary(c => c.Code);
 
@@ -207,8 +214,8 @@ public sealed class WorkflowTests : IDisposable
     [Fact]
     public async Task Only_evaluators_finalise_and_bu_only_courses_cannot_be_awarded()
     {
-        var staff = factory.As("staff-1");
-        var evaluator = factory.As("eval-cs");
+        var staff = await factory.AsAsync("staff-1");
+        var evaluator = await factory.AsAsync("eval-cs");
         var caseId = await CreateDemoCaseAsync(staff, "DS-0001", Northeastern);
         var detail = await MatchAsync(staff, caseId);
         var cs2510 = detail.Courses.Single(c => c.Code == "CS 2510");
@@ -238,8 +245,8 @@ public sealed class WorkflowTests : IDisposable
     [Fact]
     public async Task Second_student_reuses_approved_decision_without_an_agent_call()
     {
-        var staff = factory.As("staff-1");
-        var evaluator = factory.As("eval-cs");
+        var staff = await factory.AsAsync("staff-1");
+        var evaluator = await factory.AsAsync("eval-cs");
 
         var first = await CreateDemoCaseAsync(staff, "DS-0001");
         var csc215 = (await MatchAsync(staff, first)).Courses.Single(c => c.Code == "CSC 215");
@@ -259,8 +266,8 @@ public sealed class WorkflowTests : IDisposable
     [Fact]
     public async Task No_credit_given_for_a_low_grade_is_not_reused_for_a_student_with_a_good_grade()
     {
-        var staff = factory.As("staff-1");
-        var evaluator = factory.As("eval-cs");
+        var staff = await factory.AsAsync("staff-1");
+        var evaluator = await factory.AsAsync("eval-cs");
 
         // Student A has a D in MATH 3A; the evaluator gives no credit because of the grade.
         var first = await CreateDemoCaseAsync(staff, "DS-0001", Northeastern);
@@ -282,8 +289,8 @@ public sealed class WorkflowTests : IDisposable
     [Fact]
     public async Task Elective_credit_must_award_units_and_staff_cannot_change_units_when_confirming()
     {
-        var staff = factory.As("staff-1");
-        var evaluator = factory.As("eval-cs");
+        var staff = await factory.AsAsync("staff-1");
+        var evaluator = await factory.AsAsync("eval-cs");
         var caseId = await CreateDemoCaseAsync(staff, "DS-0001", Northeastern);
         var byCode = (await MatchAsync(staff, caseId)).Courses.ToDictionary(c => c.Code);
 
@@ -307,8 +314,8 @@ public sealed class WorkflowTests : IDisposable
     [Fact]
     public async Task Students_see_only_their_own_case_and_no_reviewer_notes()
     {
-        var staff = factory.As("staff-1");
-        var studentA = factory.As("student-a");
+        var staff = await factory.AsAsync("staff-1");
+        var studentA = await factory.AsAsync("student-a");
         var aCase = await CreateDemoCaseAsync(staff, "DS-0001");
         var bCase = await CreateDemoCaseAsync(staff, "DS-0002");
 
@@ -326,8 +333,8 @@ public sealed class WorkflowTests : IDisposable
     [Fact]
     public async Task Uploads_are_validated_deduplicated_and_scanned()
     {
-        var staff = factory.As("staff-1");
-        var student = factory.As("student-a");
+        var staff = await factory.AsAsync("staff-1");
+        var student = await factory.AsAsync("student-a");
         var caseId = await CreateDemoCaseAsync(staff, "DS-0001");
 
         async Task<HttpResponseMessage> Upload(HttpClient client, string name, byte[] bytes)
@@ -367,7 +374,7 @@ public sealed class WorkflowTests : IDisposable
     [Fact]
     public async Task Email_without_case_reference_goes_to_triage_and_is_processed_once()
     {
-        var staff = factory.As("staff-1");
+        var staff = await factory.AsAsync("staff-1");
         var b64 = Convert.ToBase64String("%PDF-1.4 emailed syllabus"u8.ToArray());
         var eml = $"From: unknown@else.example\r\nSubject: syllabus\r\nMessage-ID: <{Guid.NewGuid():N}@test>\r\n" +
                   "MIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"B\"\r\n\r\n" +

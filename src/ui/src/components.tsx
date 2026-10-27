@@ -1,14 +1,16 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { api } from "./api";
 import { formatBytes, formatDateTime, scanStatus, type Tone } from "./labels";
-import type { DemoUser, DocumentInfo, DocumentType } from "./types";
+import type { CurrentUser, DocumentInfo, DocumentType } from "./types";
 
-// ---------- current demo user ----------
-export const UserContext = createContext<DemoUser | null>(null);
+// ---------- signed-in user ----------
+// These only shape the UI. The API enforces every rule again from the session's role.
+export const UserContext = createContext<CurrentUser | null>(null);
 export const useUser = () => useContext(UserContext);
-export const isReviewer = (u: DemoUser | null) => !!u && ["Staff", "Evaluator", "Admin"].includes(u.role);
-export const isStaff = (u: DemoUser | null) => !!u && ["Staff", "Admin"].includes(u.role);
-export const isEvaluator = (u: DemoUser | null) => !!u && ["Evaluator", "Admin"].includes(u.role);
+export const isReviewer = (u: CurrentUser | null) => !!u && ["Staff", "Evaluator", "Admin"].includes(u.role);
+export const isStaff = (u: CurrentUser | null) => !!u && ["Staff", "Admin"].includes(u.role);
+export const isEvaluator = (u: CurrentUser | null) => !!u && ["Evaluator", "Admin"].includes(u.role);
+export const isAdmin = (u: CurrentUser | null) => u?.role === "Admin";
 
 // ---------- data loading ----------
 export function useLoad<T>(path: string | null, pollMs?: (data: T | null) => number | null) {

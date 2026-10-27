@@ -73,17 +73,20 @@ public static class SeedData
         new() { Key = "TransferDeadlineMonths", Value = "12", Description = "BR-06: credits must transfer within one year of starting at BU." }
     ];
 
-    /// <summary>Seeds reference data and demo users. Safe to call on every start: it only fills empty tables.</summary>
+    /// <summary>
+    /// Seeds reference data and demo accounts. Safe to call on every start: it only fills empty tables.
+    /// Accounts are created without a password; the API sets one from configuration (Auth:SeedPassword).
+    /// </summary>
     public static async Task SeedReferenceDataAsync(TransferCreditDbContext db, CancellationToken ct = default)
     {
         if (!await db.RuleSettings.AnyAsync(ct))
             db.RuleSettings.AddRange(DefaultSettings());
 
-        if (!await db.DemoUsers.AnyAsync(ct))
+        if (!await db.Users.AnyAsync(ct))
         {
-            db.DemoUsers.AddRange(LoadDemo().Users.Select(u => new DemoUser
+            db.Users.AddRange(LoadDemo().Users.Select(u => new AppUser
             {
-                Id = u.Id, DisplayName = u.DisplayName, Role = u.Role, Email = u.Email, StudentRef = u.StudentRef
+                Id = u.Id, DisplayName = u.DisplayName, Role = u.Role, Email = u.Email?.ToLowerInvariant(), StudentRef = u.StudentRef
             }));
         }
 

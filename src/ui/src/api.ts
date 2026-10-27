@@ -1,21 +1,5 @@
-const USER_KEY = "tc.demoUser";
-
-export function getDemoUser(): string | null {
-  try {
-    return localStorage.getItem(USER_KEY);
-  } catch {
-    return null;
-  }
-}
-
-export function setDemoUser(id: string | null) {
-  try {
-    if (id) localStorage.setItem(USER_KEY, id);
-    else localStorage.removeItem(USER_KEY);
-  } catch {
-    /* storage unavailable: the session simply won't persist */
-  }
-}
+/** Fired when the API answers 401: the session expired, was ended, or the account was disabled. */
+export const SIGNED_OUT_EVENT = "tc:signed-out";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -23,10 +7,9 @@ export class ApiError extends Error {
   }
 }
 
+// The session is an HttpOnly cookie set by /api/auth/login; fetch sends it on same-origin requests.
 async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
   const headers: Record<string, string> = {};
-  const user = getDemoUser();
-  if (user) headers["X-Demo-User"] = user;
   let payload: BodyInit | undefined;
   if (body instanceof FormData) payload = body;
   else if (body !== undefined) {
@@ -54,6 +37,11 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
       /* not JSON */
     }
     if (res.status === 403 && message.startsWith("403")) message = "You do not have access to this.";
+    // /api/me answers 401 to every visitor who is not signed in yet; that is not a session ending.
+    if (res.status === 401 && !path.startsWith("/api/auth/") && path !== "/api/me") {
+      message = "Your session has ended. Sign in again.";
+      window.dispatchEvent(new Event(SIGNED_OUT_EVENT));
+    }
     throw new ApiError(res.status, message);
   }
   if (res.status === 204 || res.status === 202) {
@@ -75,8 +63,7 @@ export const api = {
       window.open(link.url, "_blank", "noopener");
       return;
     }
-    const user = getDemoUser();
-    const res = await fetch(link.url, { headers: user ? { "X-Demo-User": user } : {} });
+    const res = await fetch(link.url);
     if (!res.ok) throw new ApiError(res.status, "Could not open the document.");
     const blob = await res.blob();
     window.open(URL.createObjectURL(blob), "_blank", "noopener");

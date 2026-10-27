@@ -64,7 +64,7 @@ public sealed class AgentReuseTests
     {
         var agent = new FakeServiceAgent("gpt-4o");
         using var factory = new AgentServiceFactory(agent);
-        var staff = factory.As("staff-1");
+        var staff = await factory.AsAsync("staff-1");
 
         await MatchDemoCaseAsync(staff, "DS-0001");
         var firstCalls = agent.Calls;
@@ -79,7 +79,7 @@ public sealed class AgentReuseTests
     {
         var agent = new FakeServiceAgent("mock-keyword-overlap (not AI)");
         using var factory = new AgentServiceFactory(agent);
-        var staff = factory.As("staff-1");
+        var staff = await factory.AsAsync("staff-1");
 
         await MatchDemoCaseAsync(staff, "DS-0001");
         var firstCalls = agent.Calls;

@@ -1,5 +1,8 @@
 ﻿using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using TransferCredit.Api;
@@ -11,6 +14,7 @@ using TransferCredit.Api.Intake;
 using TransferCredit.Api.Rules;
 using TransferCredit.Api.Services;
 using TransferCredit.Data;
+using TransferCredit.Data.Entities;
 using TransferCredit.Data.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,10 +49,53 @@ if (string.IsNullOrWhiteSpace(connectionString))
 builder.Services.AddDbContext<TransferCreditDbContext>(o =>
     o.UseSqlServer(connectionString, sql => sql.EnableRetryOnFailure()));
 
-// ---------- Identity (DEMO header auth; replace with Entra ID for real use) ----------
-builder.Services.AddAuthentication(DemoAuthHandler.SchemeName)
-    .AddScheme<AuthenticationSchemeOptions, DemoAuthHandler>(DemoAuthHandler.SchemeName, null);
+// ---------- Identity: username and password, roles from the Users table, HttpOnly cookie session ----------
+builder.Services.Configure<AuthOptions>(config.GetSection("Auth"));
+var authOptions = config.GetSection("Auth").Get<AuthOptions>() ?? new AuthOptions();
+builder.Services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
+builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<UserImportService>();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(o =>
+    {
+        o.Cookie.Name = "tc.session";
+        o.Cookie.HttpOnly = true;
+        // Strict: the browser never sends the session on a request started by another site (CSRF).
+        o.Cookie.SameSite = SameSiteMode.Strict;
+        o.Cookie.SecurePolicy = builder.Environment.IsProduction() ? CookieSecurePolicy.Always : CookieSecurePolicy.SameAsRequest;
+        o.ExpireTimeSpan = TimeSpan.FromHours(authOptions.SessionHours);
+        o.SlidingExpiration = true;
+        // An API answers with status codes; the React app shows the sign-in page.
+        o.Events.OnRedirectToLogin = ctx => { ctx.Response.StatusCode = StatusCodes.Status401Unauthorized; return Task.CompletedTask; };
+        o.Events.OnRedirectToAccessDenied = ctx => { ctx.Response.StatusCode = StatusCodes.Status403Forbidden; return Task.CompletedTask; };
+        o.Events.OnValidatePrincipal = async ctx =>
+        {
+            var accounts = ctx.HttpContext.RequestServices.GetRequiredService<AccountService>();
+            if (ctx.Principal is null || !await accounts.IsSessionValidAsync(ctx.Principal, ctx.HttpContext.RequestAborted))
+            {
+                ctx.RejectPrincipal();
+                await ctx.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            }
+        };
+    });
 builder.Services.AddAuthorization(Policies.Register);
+builder.Services.AddRateLimiter(o =>
+{
+    o.AddPolicy(AuthEndpoints.SignInRateLimit, http => RateLimitPartition.GetFixedWindowLimiter(
+        http.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = authOptions.SignInAttemptsPerMinute, Window = TimeSpan.FromMinutes(1), QueueLimit = 0
+        }));
+    o.OnRejected = async (ctx, ct) =>
+    {
+        ctx.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        await ctx.HttpContext.Response.WriteAsJsonAsync(new
+        {
+            title = "Too many attempts", status = 429, detail = "Too many sign-in attempts. Wait a minute and try again."
+        }, ct);
+    };
+});
 
 // ---------- Application services ----------
 builder.Services.AddSingleton(TimeProvider.System);
@@ -102,6 +149,14 @@ var app = builder.Build();
 
 await InitialiseDatabaseAsync(app);
 
+// One-off admin command instead of the web server: dotnet run -- import-users <file.csv> [--dry-run] [--no-password-change]
+// Host options such as --contentRoot may come first, so look for the command anywhere.
+if (Array.IndexOf(args, UserImportCommand.Name) is var command and >= 0)
+{
+    Environment.ExitCode = await UserImportCommand.RunAsync(app.Services, args[(command + 1)..]);
+    return;
+}
+
 app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
 {
@@ -121,8 +176,26 @@ if (app.Environment.IsDevelopment() && !Directory.Exists(Path.Combine(app.Enviro
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseAuthentication();
+app.UseRateLimiter();
+// An account given a temporary password can only change it, until it does.
+app.Use(async (http, next) =>
+{
+    var path = http.Request.Path;
+    if (http.User.HasClaim(AppClaims.MustChangePassword, "true") && path.StartsWithSegments("/api")
+        && !path.StartsWithSegments("/api/auth") && !path.StartsWithSegments("/api/me"))
+    {
+        http.Response.StatusCode = StatusCodes.Status403Forbidden;
+        await http.Response.WriteAsJsonAsync(new
+        {
+            title = "Password change required", status = 403, detail = "Choose a new password before you continue."
+        });
+        return;
+    }
+    await next();
+});
 app.UseAuthorization();
 
+app.MapAuthEndpoints();
 app.MapCaseEndpoints();
 app.MapCourseEndpoints();
 app.MapDocumentEndpoints();
@@ -145,6 +218,7 @@ static async Task InitialiseDatabaseAsync(WebApplication app)
         else await db.Database.EnsureCreatedAsync();
     }
     await SeedData.SeedReferenceDataAsync(db);
+    await scope.ServiceProvider.GetRequiredService<AccountService>().SeedPasswordsAsync(CancellationToken.None);
 
     if (config.GetValue("Demo:SeedDemoCase", true) && !await db.Cases.AnyAsync())
     {

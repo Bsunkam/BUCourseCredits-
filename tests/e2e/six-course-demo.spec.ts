@@ -1,8 +1,20 @@
 import { expect, test, type Page } from "@playwright/test";
 
+// The seeded demo accounts share Auth:SeedPassword (appsettings.Development.json).
+const PASSWORD = process.env.E2E_PASSWORD ?? "TransferDemo#2026";
+
 async function signInAs(page: Page, userId: string) {
   await page.goto("/");
-  await page.getByLabel("Demo user").selectOption(userId);
+  const signOut = page.getByRole("button", { name: "Sign out" });
+  if (await signOut.isVisible()) {
+    await signOut.click();
+    await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
+  }
+  await page.goto("/login");
+  await page.getByLabel("Username or email").fill(userId);
+  await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Sign out" })).toBeVisible();
 }
 
 const coursesSection = (page: Page) => page.locator("section", { has: page.getByRole("heading", { name: "Courses" }) });

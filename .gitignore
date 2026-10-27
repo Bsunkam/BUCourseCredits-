@@ -13,3 +13,5 @@ src/agent/eval/results.csv
 test-results/
 playwright-report/
 .env
+# Credential import files hold plain-text passwords: never commit them.
+*users-import*.csv
