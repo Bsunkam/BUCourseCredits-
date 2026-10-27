@@ -12,6 +12,7 @@ import StudentPage from "./pages/StudentPage";
 import StatusPage from "./pages/StatusPage";
 import MetricsPage from "./pages/MetricsPage";
 import DashboardPage from "./pages/DashboardPage";
+import OverviewPage from "./pages/OverviewPage";
 
 export default function App() {
   const [users, setUsers] = useState<DemoUser[] | null>(null);
@@ -39,9 +40,10 @@ export default function App() {
       <div className="shell">
       <aside className="sidebar">
         <span className="brand"><span className="brand-mark">TC</span>Transfer Credit Review</span>
-        {user && (
-          <nav className="nav" aria-label="Main">
-            {user.role === "Student" ? (
+        <nav className="nav" aria-label="Main">
+          <NavLink to="/overview" className={({ isActive }) => (isActive || !user ? "active" : "")}>Overview</NavLink>
+          {user && (
+            user.role === "Student" ? (
               <NavLink to="/my">My transfer credit</NavLink>
             ) : (
               <>
@@ -51,9 +53,9 @@ export default function App() {
                 <NavLink to="/catalogue">Catalogue & rules</NavLink>
                 <NavLink to="/metrics">Metrics & AI evidence</NavLink>
               </>
-            )}
-          </nav>
-        )}
+            )
+          )}
+        </nav>
         <span className="spacer" />
         <label className="field">
           Demo user
@@ -70,11 +72,12 @@ export default function App() {
       </div>
       <main>
         {!user ? (
-          <SignIn users={users} onPick={switchUser} />
+          <OverviewPage />
         ) : (
           <Routes>
             <Route path="/" element={<Navigate to={user.role === "Student" ? "/my" : "/dashboard"} replace />} />
             <Route path="/my" element={<StudentPage />} />
+            <Route path="/overview" element={<OverviewPage signedIn />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/cases" element={<CasesPage />} />
             <Route path="/cases/:id" element={isReviewer(user) ? <CaseDetailPage /> : <Navigate to="status" replace />} />
@@ -93,20 +96,3 @@ export default function App() {
   );
 }
 
-function SignIn({ users, onPick }: { users: DemoUser[]; onPick: (id: string) => void }) {
-  return (
-    <div className="card stack" style={{ maxWidth: 560, margin: "40px auto" }}>
-      <h1>Choose a demo user</h1>
-      <p className="muted">
-        Each role sees a different view. Demo sign-in only; a real deployment uses Microsoft Entra ID.
-      </p>
-      <div className="stack">
-        {users.map((u) => (
-          <button key={u.id} onClick={() => onPick(u.id)} style={{ textAlign: "left" }}>
-            <strong>{u.displayName}</strong> <span className="muted small">· {u.role}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}

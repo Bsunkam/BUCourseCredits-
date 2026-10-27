@@ -36,12 +36,12 @@ and start the Python agent. The manual steps follow. Behind a TLS-inspecting pro
 # 1. API (creates and seeds the TransferCredit database on first start)
 cd src/api/TransferCredit.Api
 $env:ASPNETCORE_ENVIRONMENT = "Development"
-dotnet run --no-launch-profile --urls http://localhost:5080     # Swagger: http://localhost:5080/swagger
+dotnet run --no-launch-profile --urls http://localhost:5090     # Swagger: http://localhost:5090/swagger
 
-# 2. UI (proxies /api to :5080)
+# 2. UI (proxies /api to :5090)
 cd src/ui
 npm install
-npm run dev                                                      # http://localhost:5173
+npm run dev                                                      # http://localhost:5190
 ```
 
 Pick a demo user in the top-right corner. Each role sees a different view: staff, department evaluator, admin,

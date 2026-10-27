@@ -127,6 +127,8 @@ app.MapCaseEndpoints();
 app.MapCourseEndpoints();
 app.MapDocumentEndpoints();
 app.MapReferenceEndpoints();
+// Unknown /api paths get a 404, not the SPA page (which the UI would fail to parse as JSON).
+app.MapFallback("/api/{**path}", () => Results.NotFound(new { title = "No such API endpoint." }));
 app.MapFallbackToFile("index.html");
 
 app.Run();

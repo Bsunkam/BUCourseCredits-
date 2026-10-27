@@ -8,6 +8,7 @@ async function signInAs(page: Page, userId: string) {
 test("six-course demo: rules, review, human decision and student view", async ({ page }) => {
   // Staff creates a fresh synthetic case and runs matching.
   await signInAs(page, "staff-1");
+  await page.getByRole("link", { name: "Cases", exact: true }).click(); // staff land on the dashboard
   await page.getByRole("button", { name: /New six-course demo case/ }).click();
   await expect(page.getByRole("heading", { name: /TC-\d+ · Demo Student A/ })).toBeVisible();
   const caseUrl = page.url();

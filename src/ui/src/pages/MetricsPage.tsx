@@ -1,12 +1,15 @@
-import { ErrorAlert, Loading, Stat, useLoad } from "../components";
+import { useState } from "react";
+import { ErrorAlert, Loading, Pager, Stat, useLoad } from "../components";
 import { formatDateTime } from "../labels";
-import type { AgentRun, Metrics } from "../types";
+import type { AgentRun, Metrics, Paged } from "../types";
 
 const pct = (n: number, d: number) => (d === 0 ? "—" : `${Math.round((n / d) * 100)}%`);
 
 export default function MetricsPage() {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const metrics = useLoad<Metrics>("/api/metrics");
-  const runs = useLoad<AgentRun[]>("/api/agent-runs?take=50");
+  const runs = useLoad<Paged<AgentRun>>(`/api/agent-runs?page=${page}&pageSize=${pageSize}`);
   const m = metrics.data;
 
   return (
@@ -41,12 +44,13 @@ export default function MetricsPage() {
           </div>
           <div className="card">
             <h2>Recent agent runs</h2>
-            {!runs.data ? <Loading /> : (
+            {!runs.data ? <Loading /> : runs.data.total === 0 ? <div className="empty">No agent runs yet.</div> : (
+              <>
               <div className="table-wrap">
                 <table>
                   <thead><tr><th>#</th><th>Path</th><th>Status</th><th>Model</th><th>Prompt</th><th className="num">ms</th><th>When</th></tr></thead>
                   <tbody>
-                    {runs.data.map((r) => (
+                    {runs.data.items.map((r) => (
                       <tr key={r.id}>
                         <td>{r.id}</td>
                         <td>{r.source}</td>
@@ -60,6 +64,10 @@ export default function MetricsPage() {
                   </tbody>
                 </table>
               </div>
+              {/* The server clamps an out-of-range page, so follow the page it actually returned. */}
+              <Pager page={runs.data.page} pageSize={runs.data.pageSize} total={runs.data.total} unit="runs"
+                onPage={setPage} onPageSize={(s) => { setPageSize(s); setPage(1); }} />
+              </>
             )}
           </div>
         </div>

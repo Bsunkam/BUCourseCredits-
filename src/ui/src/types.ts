@@ -103,3 +103,20 @@ export interface Metrics {
   finalDecisionsWithReviewer: number; agentRunsWithModelRecord: number; failedAgentRuns: number; casesWithDeadline: number;
   coursesByStatus: Record<string, number>;
 }
+
+export interface Overview {
+  totals: {
+    cases: number; courses: number; institutions: number; catalogueCourses: number; approvedEquivalencies: number;
+    documents: number; finalDecisions: number; awardedUnits: number;
+  };
+  casesByStatus: Record<string, number>; coursesByStatus: Record<string, number>; matchLevels: Record<string, number>;
+  decisionOutcomes: Record<string, number>; documentsByType: Record<string, number>;
+  resolution: { approvedRule: number; cache: number; newRun: number; failed: number };
+  casesByProgram: { name: string; count: number }[]; coursesByInstitution: { name: string; count: number }[];
+  activity: { date: string; cases: number; documents: number; decisions: number }[];
+}
+
+/** One page of a server-paged list. */
+export interface Paged<T> {
+  items: T[]; total: number; page: number; pageSize: number;
+}

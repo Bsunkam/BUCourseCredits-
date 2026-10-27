@@ -34,7 +34,17 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     payload = JSON.stringify(body);
   }
 
-  const res = await fetch(path, { method, headers, body: payload });
+  let res: Response;
+  try {
+    res = await fetch(path, { method, headers, body: payload });
+  } catch {
+    throw new ApiError(0, "Cannot reach the API. Check that it is running on http://localhost:5090.");
+  }
+  // A web page instead of data means the request never reached the API (it is down, or the UI is served without the /api proxy).
+  if ((res.headers.get("content-type") ?? "").includes("text/html")) {
+    console.error(`Expected JSON from ${method} ${path}, got a web page (HTTP ${res.status}, ${res.url}).`);
+    throw new ApiError(res.status, `The API did not answer ${method} ${path} (HTTP ${res.status}). Check that it is running on http://localhost:5090 and open the app at http://localhost:5190.`);
+  }
   if (!res.ok) {
     let message = `${res.status} ${res.statusText}`;
     try {

@@ -1,6 +1,7 @@
-import { useState, type MouseEvent } from "react";
+import { useState, type ReactNode } from "react";
+import { BarChart, ChartCard, pct, StackedBar, type BarRow, type Segment } from "../charts";
 import { useNavigate } from "react-router-dom";
-import { ErrorAlert, isReviewer, Loading, Stat, useLoad, useUser } from "../components";
+import { Badge, DetailPanel, ErrorAlert, isReviewer, Loading, Stat, useLoad, useUser } from "../components";
 import { caseStatus, courseStatus, deadlineText, formatDate } from "../labels";
 import type { CaseStatus, CaseSummary, CourseStatus, Metrics } from "../types";
 
@@ -9,7 +10,6 @@ const CASE_ORDER: CaseStatus[] = ["Open", "AwaitingDocuments", "InReview", "Deci
 const COURSE_ORDER: CourseStatus[] = ["Pending", "Matching", "NeedsSyllabus", "NeedsReview", "ApprovedMatchFound", "Blocked", "Decided"];
 const CLOSED: CaseStatus[] = ["Decided", "Posted"];
 
-const pct = (n: number, d: number) => (d === 0 ? 0 : Math.round((n / d) * 100));
 
 export default function DashboardPage() {
   const user = useUser();
@@ -69,16 +69,40 @@ function Dashboard({ m, list, onStatus, onCase }: {
     { key: "agent", label: "New agent run", value: m.aiCalls, color: "var(--viz-3)" },
   ];
 
-  const attention = [...active].sort((a, b) => a.daysRemaining - b.daysRemaining).slice(0, 5);
+  const byDeadline = (cs: CaseSummary[]) => [...cs].sort((a, b) => a.daysRemaining - b.daysRemaining);
+  const attention = byDeadline(active).slice(0, 5);
+
+  // Each tile opens the cases behind its number, right under the tiles.
+  const [focus, setFocus] = useState<Focus | null>(null);
+  const details: Record<Focus, { title: string; note: string; cases: CaseSummary[]; empty: string }> = {
+    all: { title: "All cases", note: `${active.length} open, ${list.length - active.length} decided or posted.`, cases: byDeadline(list), empty: "No cases yet." },
+    overdue: { title: "Open cases past their deadline", note: "Oldest deadline first.", cases: byDeadline(overdue), empty: "No open case is past its deadline." },
+    waiting: {
+      title: "Cases with courses waiting for a decision", note: `${openCourses} courses across these cases still need a final decision.`,
+      cases: byDeadline(list.filter((c) => c.openCourseCount > 0)), empty: "Every course has a final decision.",
+    },
+    decided: {
+      title: "Cases with decided courses", note: `${decidedCourses} of ${m.courses} courses have a final decision.`,
+      cases: byDeadline(list.filter((c) => c.openCourseCount < c.courseCount)), empty: "No course has a final decision yet.",
+    },
+  };
+  const tile = (key: Focus, value: ReactNode, label: string) => (
+    <Stat value={value} label={label} active={focus === key} onClick={() => setFocus(focus === key ? null : key)} />
+  );
 
   return (
     <div className="stack dash">
       <div className="grid-4">
-        <Stat value={m.cases} label={`Cases (${active.length} still open)`} />
-        <Stat value={overdue.length} label="Open cases past their deadline" />
-        <Stat value={openCourses} label="Courses waiting for a decision" />
-        <Stat value={`${pct(decidedCourses, m.courses)}%`} label={`Courses decided (${decidedCourses} of ${m.courses})`} />
+        {tile("all", m.cases, `Cases (${active.length} still open)`)}
+        {tile("overdue", overdue.length, "Open cases past their deadline")}
+        {tile("waiting", openCourses, "Courses waiting for a decision")}
+        {tile("decided", `${pct(decidedCourses, m.courses)}%`, `Courses decided (${decidedCourses} of ${m.courses})`)}
       </div>
+      {focus && (
+        <DetailPanel title={details[focus].title} note={details[focus].note} onClose={() => setFocus(null)}>
+          <CaseTable cases={details[focus].cases} onCase={onCase} empty={details[focus].empty} />
+        </DetailPanel>
+      )}
 
       <div className="viz-grid">
         <ChartCard title="Cases by status" note="Click a bar to open the matching cases.">
@@ -99,105 +123,33 @@ function Dashboard({ m, list, onStatus, onCase }: {
 
       <div className="card">
         <h2>Closest deadlines</h2>
-        {attention.length === 0 ? <div className="empty">No open cases.</div> : (
-          <div className="table-wrap">
-            <table>
-              <thead><tr><th>Case</th><th>Student (synthetic)</th><th>Status</th><th className="num">Open courses</th><th>Deadline</th></tr></thead>
-              <tbody>
-                {attention.map((c) => (
-                  <tr key={c.id} className="clickable" onClick={() => onCase(c)}>
-                    <td><a href={`/cases/${c.id}`} onClick={(e) => { e.preventDefault(); onCase(c); }}>{c.caseRef}</a></td>
-                    <td>{c.studentName}</td>
-                    <td>{caseStatus[c.status].label}</td>
-                    <td className="num">{c.openCourseCount} / {c.courseCount}</td>
-                    <td>{formatDate(c.deadlineDate)} <span className="muted small">· {deadlineText(c.daysRemaining, c.overdue)}</span></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <CaseTable cases={attention} onCase={onCase} empty="No open cases." />
       </div>
     </div>
   );
 }
 
-// ---------- chart pieces (plain HTML, no chart library) ----------
+type Focus = "all" | "overdue" | "waiting" | "decided";
 
-type Tip = { x: number; y: number; text: string } | null;
-
-function useTip() {
-  const [tip, setTip] = useState<Tip>(null);
-  const show = (text: string) => (e: MouseEvent) => setTip({ x: e.clientX, y: e.clientY, text });
-  const hide = () => setTip(null);
-  const node = tip && <div className="viz-tip" style={{ left: tip.x + 12, top: tip.y + 12 }} role="tooltip">{tip.text}</div>;
-  return { show, hide, node };
-}
-
-const plural = (n: number, unit: string) => `${n} ${n === 1 ? unit : unit.endsWith("ch") ? `${unit}es` : `${unit}s`}`;
-
-function ChartCard({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
+function CaseTable({ cases, onCase, empty }: { cases: CaseSummary[]; onCase: (c: CaseSummary) => void; empty: string }) {
+  if (cases.length === 0) return <div className="empty">{empty}</div>;
   return (
-    <div className="card viz-card">
-      <h2>{title}</h2>
-      {children}
-      {note && <p className="muted small viz-note">{note}</p>}
-    </div>
-  );
-}
-
-type BarRow = { key: string; label: string; value: number; critical?: boolean; onClick?: () => void };
-
-function BarChart({ rows, unit }: { rows: BarRow[]; unit: string }) {
-  const { show, hide, node } = useTip();
-  const max = Math.max(1, ...rows.map((r) => r.value));
-  const total = rows.reduce((n, r) => n + r.value, 0);
-  return (
-    <div className="viz-bars" onMouseLeave={hide}>
-      {rows.map((r) => {
-        const text = `${r.label.replace("⚠ ", "")}: ${plural(r.value, unit)} (${pct(r.value, total)}% of ${total})`;
-        return (
-          <div key={r.key} className={`viz-row${r.onClick ? " clickable" : ""}`} onMouseMove={show(text)}
-            onClick={r.onClick} role={r.onClick ? "button" : undefined} tabIndex={r.onClick ? 0 : undefined}
-            onKeyDown={r.onClick ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); r.onClick?.(); } } : undefined}
-            aria-label={text}>
-            <span className="viz-label">{r.label}</span>
-            <span className="viz-track">
-              {r.value > 0 && <span className={`viz-bar${r.critical ? " critical" : ""}`} style={{ width: `${(r.value / max) * 100}%` }} />}
-              <span className="viz-value">{r.value}</span>
-            </span>
-          </div>
-        );
-      })}
-      {node}
-    </div>
-  );
-}
-
-type Segment = { key: string; label: string; value: number; color: string };
-
-function StackedBar({ segments, unit }: { segments: Segment[]; unit: string }) {
-  const { show, hide, node } = useTip();
-  const total = segments.reduce((n, s) => n + s.value, 0);
-  if (total === 0) return <div className="empty">No matches run yet.</div>;
-  return (
-    <div className="stack" style={{ gap: 12 }} onMouseLeave={hide}>
-      <div className="viz-stack" role="img" aria-label={segments.map((s) => `${s.label} ${s.value}`).join(", ")}>
-        {segments.filter((s) => s.value > 0).map((s) => (
-          <span key={s.key} style={{ flexGrow: s.value, background: s.color }}
-            onMouseMove={show(`${s.label}: ${plural(s.value, unit)} (${pct(s.value, total)}%)`)} />
-        ))}
-      </div>
-      <ul className="viz-legend">
-        {segments.map((s) => (
-          <li key={s.key}>
-            <span className="viz-swatch" style={{ background: s.color }} />
-            {s.label}
-            <span className="viz-legend-value">{s.value} · {pct(s.value, total)}%</span>
-          </li>
-        ))}
-      </ul>
-      {node}
+    <div className="table-wrap">
+      <table>
+        <thead><tr><th>Case</th><th>Student (synthetic)</th><th>Program</th><th>Status</th><th className="num">Open courses</th><th>Deadline</th></tr></thead>
+        <tbody>
+          {cases.map((c) => (
+            <tr key={c.id} className="clickable" onClick={() => onCase(c)}>
+              <td><a href={`/cases/${c.id}`} onClick={(e) => { e.preventDefault(); onCase(c); }}>{c.caseRef}</a></td>
+              <td>{c.studentName}</td>
+              <td>{c.program}</td>
+              <td><Badge tone={caseStatus[c.status].tone}>{caseStatus[c.status].label}</Badge></td>
+              <td className="num">{c.openCourseCount} / {c.courseCount}</td>
+              <td>{formatDate(c.deadlineDate)} <span className="muted small">· {deadlineText(c.daysRemaining, c.overdue)}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

@@ -60,11 +60,41 @@ export function Loading({ what = "Loading" }: { what?: string }) {
   return <div className="empty">{what}…</div>;
 }
 
-export function Stat({ value, label, hint }: { value: ReactNode; label: string; hint?: string }) {
+export function Stat({ value, label, hint, onClick, active }: {
+  value: ReactNode; label: string; hint?: string; onClick?: () => void; active?: boolean;
+}) {
+  if (!onClick) {
+    return (
+      <div className="card stat" title={hint}>
+        <span className="value">{value}</span>
+        <span className="label">{label}</span>
+      </div>
+    );
+  }
   return (
-    <div className="card stat" title={hint}>
+    <div className={`card stat clickable${active ? " active" : ""}`} title={hint} role="button" tabIndex={0} aria-pressed={!!active}
+      onClick={onClick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } }}>
       <span className="value">{value}</span>
       <span className="label">{label}</span>
+      <span className="stat-more">{active ? "Hide details" : "View details →"}</span>
+    </div>
+  );
+}
+
+/** The table a clicked tile opens, shown right under the tiles. */
+export function DetailPanel({ title, note, onClose, children }: { title: string; note?: string; onClose: () => void; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => { ref.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, [title]);
+  return (
+    <div ref={ref} className="card detail-panel" role="region" aria-label={title}>
+      <div className="row between">
+        <div>
+          <h2>{title}</h2>
+          {note && <p className="muted small" style={{ margin: "-8px 0 0" }}>{note}</p>}
+        </div>
+        <button onClick={onClose} aria-label="Close details">Close</button>
+      </div>
+      {children}
     </div>
   );
 }
@@ -173,5 +203,47 @@ export function UploadPanel({
       </div>
       {message && <div className={`alert ${message.kind}`}>{message.text}</div>}
     </div>
+  );
+}
+
+// ---------- paging ----------
+/** Page numbers to show: always the first and last, plus a window around the current page. */
+function pageList(page: number, pages: number): (number | "…")[] {
+  const keep = new Set([1, pages, page - 1, page, page + 1].filter((p) => p >= 1 && p <= pages));
+  const sorted = [...keep].sort((a, b) => a - b);
+  // A gap of one page shows that page; only longer gaps collapse to "…".
+  return sorted.flatMap((p, i) => {
+    const gap = i > 0 ? p - sorted[i - 1] : 1;
+    return gap === 2 ? [p - 1, p] : gap > 2 ? ["…" as const, p] : [p];
+  });
+}
+
+export function Pager({ page, pageSize, total, unit, onPage, onPageSize, sizes = [10, 25, 50] }: {
+  page: number; pageSize: number; total: number; unit: string;
+  onPage: (page: number) => void; onPageSize?: (size: number) => void; sizes?: number[];
+}) {
+  const pages = Math.max(1, Math.ceil(total / pageSize));
+  const first = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const last = Math.min(total, page * pageSize);
+  return (
+    <nav className="pager" aria-label={`${unit} pages`}>
+      <span className="muted small">Showing {first}–{last} of {total} {unit}</span>
+      <div className="row">
+        {onPageSize && (
+          <label className="row small muted">
+            Rows per page
+            <select value={pageSize} onChange={(e) => onPageSize(Number(e.target.value))}>
+              {sizes.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </label>
+        )}
+        <button onClick={() => onPage(page - 1)} disabled={page <= 1} aria-label="Previous page">‹ Prev</button>
+        {pageList(page, pages).map((p, i) => p === "…"
+          ? <span key={`gap-${i}`} className="muted pager-gap">…</span>
+          : <button key={p} className={p === page ? "pager-current" : undefined} aria-current={p === page ? "page" : undefined}
+              onClick={() => onPage(p)}>{p}</button>)}
+        <button onClick={() => onPage(page + 1)} disabled={page >= pages} aria-label="Next page">Next ›</button>
+      </div>
+    </nav>
   );
 }
