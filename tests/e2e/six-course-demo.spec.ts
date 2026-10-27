@@ -15,7 +15,7 @@ test("six-course demo: rules, review, human decision and student view", async ({
   await page.getByRole("button", { name: /Run matching/ }).click();
 
   const courses = page.locator("section", { has: page.getByRole("heading", { name: "Courses" }) });
-  await expect(courses.getByText("Blocked by program rule")).toBeVisible({ timeout: 20_000 });
+  await expect(courses.getByText("Blocked by program rule")).toBeVisible({ timeout: 90_000 }); // a real model call can take ~30 s
   // 3 seeded mappings; CS 2510 is a 4th when an evaluator already decided it in this environment (reuse).
   expect(await courses.getByText("Approved mapping found").count()).toBeGreaterThanOrEqual(3);
   await expect(page.getByRole("row", { name: /CS 2510/ })).toContainText("CAS CS 112");

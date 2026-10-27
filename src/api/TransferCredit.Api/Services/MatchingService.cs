@@ -155,12 +155,19 @@ public class MatchingService(
         return new(course.Status, "ApprovedRule", false);
     }
 
-    private Task<AgentRun?> FindCachedRunAsync(string key, CancellationToken ct) =>
-        db.AgentRuns.AsNoTracking()
+    private Task<AgentRun?> FindCachedRunAsync(string key, CancellationToken ct)
+    {
+        var runs = db.AgentRuns.AsNoTracking()
             .Where(r => r.CacheKey == key && r.Source == AgentRunSource.NewRun && r.OutputJson != null
-                        && (r.Status == AgentRunStatus.Succeeded || r.Status == AgentRunStatus.PausedForReview))
-            .OrderByDescending(r => r.Id)
-            .FirstOrDefaultAsync(ct);
+                        && (r.Status == AgentRunStatus.Succeeded || r.Status == AgentRunStatus.PausedForReview));
+        // With the agent service, never pass off a keyword ranking ("... (not AI)") from mock or stub mode as an AI
+        // suggestion: the course is matched again. The local stub may still reuse its own runs.
+        if (agent.Mode != "stub")
+            runs = runs.Where(r => r.Model != null && !r.Model.EndsWith(NotAiSuffix));
+        return runs.OrderByDescending(r => r.Id).FirstOrDefaultAsync(ct);
+    }
+
+    private const string NotAiSuffix = "(not AI)";
 
     private async Task<MatchOutcome> RunAgentAsync(
         SourceCourse course, string program, string key, PolicyFlags flags, RuleSettingsSnapshot settings,

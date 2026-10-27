@@ -32,6 +32,14 @@ Quick start: `.\run-local.ps1` starts the API on LocalDB and the UI in two windo
 and start the Python agent. The manual steps follow. Behind a TLS-inspecting proxy, add `--use-feature=truststore` to
 `pip install`.
 
+**Real AI locally:** copy `src/agent/.env.example` to `src/agent/.env` and fill in the Azure OpenAI endpoint, key and
+deployment (gpt-4o). `.\run-local.ps1` then starts the agent automatically in Azure mode, so suggestions come from the
+model. `.env` is git- and docker-ignored. Behind a TLS-inspecting proxy, also set `SSL_CERT_FILE` there to a PEM bundle
+that includes the proxy's root certificate.
+
+When the API uses the agent service, it never reuses a keyword ranking ("… (not AI)") as an AI suggestion: courses
+matched earlier in mock or stub mode are matched again by the model.
+
 ```powershell
 # 1. API (creates and seeds the TransferCredit database on first start)
 cd src/api/TransferCredit.Api
